@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # books_bay
 
 book buying application
@@ -17,4 +16,7 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 =======
 # book_bay
->>>>>>> e56cb414411c0320d2a7c05d38e6017a2c8e032d
+
+Members name.
+
+  Eyosiyas Girma ---  ATR/0731/10
