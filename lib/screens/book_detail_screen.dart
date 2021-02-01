@@ -1,12 +1,122 @@
 import 'dart:ui';
 
+import 'package:books_bay/blocs/books_list/books_list_bloc.dart';
+import 'package:books_bay/blocs/cart/cart_bloc.dart';
+import 'package:books_bay/blocs/cart/cart_event.dart';
+import 'package:books_bay/blocs/cart/cart_state.dart';
+import 'package:books_bay/blocs/in_cart/incart_bloc.dart';
+import 'package:books_bay/blocs/in_cart/incart_event.dart';
+import 'package:books_bay/blocs/in_cart/incart_state.dart';
+import 'package:books_bay/models/book.dart';
+import 'package:books_bay/models/comment.dart';
+import 'package:books_bay/widgets/bag_wrapper.dart';
 import 'package:books_bay/widgets/category_chip.dart';
+import 'package:books_bay/widgets/review_tile.dart';
+import 'package:books_bay/widgets/write_review_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../constants.dart';
 
-class BookDetailScreen extends StatelessWidget {
+class BookDetailScreen extends StatefulWidget {
+  final Book book;
+
+  BookDetailScreen(this.book);
+
+  @override
+  _BookDetailScreenState createState() => _BookDetailScreenState();
+}
+
+class _BookDetailScreenState extends State<BookDetailScreen> {
+  CartBloc _cartBloc;
+  InCartBloc _inCartBloc = InCartBloc();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void didChangeDependencies() {
+    _cartBloc = BlocProvider.of<CartBloc>(context);
+    _inCartBloc.add(CheckInCartEvent(widget.book));
+    super.didChangeDependencies();
+  }
+
+  _addToBag() {
+    _cartBloc.add(
+      BookAddedToCart(widget.book),
+    );
+    _inCartBloc.add(
+      CheckInCartEvent(widget.book),
+    );
+  }
+
+  _openReview() {
+    _scaffoldKey.currentState.showBottomSheet(
+      (context) => WriteReviewScreen(),
+      elevation: 10,
+    );
+  }
+
+  _bottomTile() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '${widget.book.price.toStringAsFixed(2)} ETB',
+              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    color: Theme.of(context).primaryColor,
+                  ),
+              overflow: TextOverflow.ellipsis,
+            ),
+            BlocBuilder<InCartBloc, InCartState>(
+              cubit: _inCartBloc,
+              builder: (ctx, state) {
+                if (state is InCartStateChanged) {
+                  if (state.isInCart) {
+                    return FlatButton.icon(
+                      color: Theme.of(context).primaryColor,
+                      onPressed: null,
+                      label: Text('Add To Bag'),
+                      disabledColor: Colors.grey,
+                      icon: Icon(
+                        Icons.shopping_bag,
+                        color: Colors.white,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      textColor: Colors.white,
+                    );
+                  }
+                }
+                return FlatButton.icon(
+                  color: Theme.of(context).primaryColor,
+                  onPressed: _addToBag,
+                  label: Text('Add To Bag'),
+                  disabledColor: Colors.grey,
+                  icon: Icon(
+                    Icons.shopping_bag,
+                    color: Colors.white,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  textColor: Colors.white,
+                );
+              },
+            )
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: true,
@@ -15,12 +125,7 @@ class BookDetailScreen extends StatelessWidget {
         ),
         backgroundColor: Colors.transparent,
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.shopping_bag,
-            ),
-            onPressed: () {},
-          )
+          BagWrapper(),
         ],
       ),
       body: Padding(
@@ -29,7 +134,8 @@ class BookDetailScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Container(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: ListView(
                   children: [
                     SizedBox(
@@ -39,7 +145,7 @@ class BookDetailScreen extends StatelessWidget {
                       child: Card(
                         elevation: 5,
                         child: Image.network(
-                          'https://ebooks-bay.herokuapp.com/api/v1/images/_Cover_Tools_of_Titans.jpg',
+                          Endpoints.imageUrl(widget.book.coverImage),
                           fit: BoxFit.cover,
                           height: 200,
                         ),
@@ -50,7 +156,7 @@ class BookDetailScreen extends StatelessWidget {
                     ),
                     Center(
                       child: Text(
-                        'Tools of Titans',
+                        '${widget.book.title}',
                         style: Theme.of(context).textTheme.bodyText1.copyWith(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -60,7 +166,7 @@ class BookDetailScreen extends StatelessWidget {
                     ),
                     Center(
                       child: Text(
-                        'Tim Ferriss',
+                        '${widget.book.author}',
                         style: Theme.of(context).textTheme.bodyText2.copyWith(
                               fontWeight: FontWeight.w300,
                               fontSize: 13,
@@ -72,60 +178,56 @@ class BookDetailScreen extends StatelessWidget {
                       height: 10,
                     ),
                     Text(
-                      'Tools of Titans is a bible of the best advice Tim Ferriss has learned while running his podcast. Tim has interviewed over two hundred successful individuals on his podcast, The Tim Ferriss Show. These guests range from super celebrities, such as Jamie Foxx, Arnold Schwarzenegger and Seth Rogen, to extreme athletes and black-market biochemists. However, what each of these individuals shares is a recipe for success. This book contains an integration of all the insightful tools, tactics, tips, and tricks offered by these podcast guests.',
+                      '${widget.book.description}',
                       style: Theme.of(context).textTheme.bodyText2.copyWith(
                             fontWeight: FontWeight.w300,
                             fontSize: 15,
                             color: Colors.black54,
                           ),
                       textAlign: TextAlign.justify,
-                    )
+//                      softWrap: true,
+                    ),
+                    SizedBox(height: 10),
+                    Wrap(
+                      spacing: 3,
+                      children: widget.book.genre
+                          .map((_genre) => CategoryChip(category: _genre))
+                          .toList(),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Reviews',
+                          style: Theme.of(context).textTheme.bodyText1.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.add,
+                            size: 25,
+                          ),
+                          color: Theme.of(context).primaryColor,
+                          onPressed: _openReview,
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Column(
+                      children: widget.book.comments
+                          .map((comment) => ReviewTile())
+                          .toList(),
+                    ),
                   ],
                 ),
               ),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Wrap(
-                  children: [
-                    CategoryChip(
-                      category: 'Childrens',
-                    ),
-                    CategoryChip(
-                      category: 'Mystery',
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '120 ETB',
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    FlatButton.icon(
-                      color: Theme.of(context).primaryColor,
-                      onPressed: () {},
-                      label: Text('Add To Bag'),
-                      icon: Icon(
-                        Icons.shopping_bag,
-                        color: Colors.white,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      textColor: Colors.white,
-                    )
-                  ],
-                ),
-              ],
-            ),
+            _bottomTile(),
           ],
         ),
       ),

@@ -29,15 +29,18 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
       bottomNavigationBar: SizedBox(
         height: 38,
         child: BottomNavigationBar(
+          backgroundColor: Theme.of(context).backgroundColor,
           items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.home_filled), label: 'Home'),
+              icon: Icon(Icons.home_filled),
+              label: 'Home',
+            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.library_books),
               label: 'Library',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.search),
+              icon: Icon(Icons.search_rounded),
               label: 'Search',
             ),
           ],

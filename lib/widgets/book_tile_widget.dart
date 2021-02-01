@@ -1,6 +1,10 @@
+import 'package:books_bay/models/book.dart';
 import 'package:flutter/material.dart';
+import '../constants.dart';
 
 class BookTileWidget extends StatelessWidget {
+  final Book book;
+  BookTileWidget(this.book);
   @override
   Widget build(BuildContext context) {
     final double height = 90;
@@ -14,8 +18,8 @@ class BookTileWidget extends StatelessWidget {
             width: width,
             color: Colors.red,
             child: Image.network(
-              'https://ebooks-bay.herokuapp.com/api/v1/images/_Cover_Tools_of_Titans.jpg',
-              fit: BoxFit.contain,
+              Endpoints.imageUrl(book.coverImage),
+              fit: BoxFit.cover,
               height: height,
               width: width,
             ),
@@ -26,7 +30,7 @@ class BookTileWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'In the Woods',
+                  '${book.title}',
                   style: Theme.of(context).textTheme.bodyText1.copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
@@ -34,7 +38,7 @@ class BookTileWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  'Tana French',
+                  '${book.author}',
                   style: Theme.of(context).textTheme.bodyText2.copyWith(
                         fontWeight: FontWeight.w300,
                         fontSize: 13,
@@ -56,7 +60,7 @@ class BookTileWidget extends StatelessWidget {
                           width: 5,
                         ),
                         Text(
-                          '4.0',
+                          '${book.rating}',
                           style: Theme.of(context)
                               .textTheme
                               .bodyText1
@@ -65,7 +69,7 @@ class BookTileWidget extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      '20 ETB',
+                      '${book.price.toStringAsFixed(2)} ETB',
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1
