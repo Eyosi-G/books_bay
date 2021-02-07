@@ -4,7 +4,7 @@ abstract class CheckoutState {}
 
 class InitialCheckoutState extends CheckoutState {}
 
-class CheckoutLoadingState extends CheckoutState {}
+class GeneratingLinkState extends CheckoutState {}
 
 class CheckoutCompletedState extends CheckoutState {
   final Checkout checkout;

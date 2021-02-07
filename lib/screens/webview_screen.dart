@@ -6,8 +6,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 enum webviewState { finished }
 
 class WebViewScreen extends StatefulWidget {
-//  final String url;
-//  WebViewScreen(this.url);
+  final String url;
+  WebViewScreen(this.url);
 
   @override
   _WebViewScreenState createState() => _WebViewScreenState();
@@ -30,7 +30,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         children: [
           Container(
             child: WebView(
-              initialUrl: 'http://www.google.com',
+              initialUrl: widget.url,
               javascriptMode: JavascriptMode.unrestricted,
               onPageFinished: (val) {
                 _streamController.sink.add(webviewState.finished);

@@ -2,19 +2,17 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
 import 'package:books_bay/db_provider/database_provider.dart';
 import 'package:books_bay/models/book.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../constants.dart';
 import 'cart_event.dart';
 import 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-//  List<Book> _books = [];
-//  UnmodifiableListView<Book> get books => UnmodifiableListView(_books);
-
   CartBloc() : super(InitialCartState());
 
   @override
@@ -27,7 +25,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   Stream<CartState> _addToCart(Book book) async* {
-    final box = await Hive.openBox('carts');
+    final box = await Hive.openBox(kHiveCartName);
     final List<Book> books = [];
     box.values.forEach((value) {
       final Map<String, dynamic> mapBook = json.decode(value);
@@ -45,7 +43,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   Stream<CartState> _removeFromCart(Book book) async* {
-    final box = await Hive.openBox('carts');
+    final box = await Hive.openBox(kHiveCartName);
     box.toMap().forEach((key, value) async {
       final Map<String, dynamic> mapBook = json.decode(value);
       final _book = Book.fromJson(mapBook);

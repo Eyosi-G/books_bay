@@ -28,6 +28,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   BooksListBloc _booksListBloc;
   AuthBloc _authBloc;
+
   @override
   void didChangeDependencies() {
     _booksListBloc = BlocProvider.of<BooksListBloc>(context);

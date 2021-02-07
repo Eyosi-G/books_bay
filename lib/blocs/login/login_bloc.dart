@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:books_bay/blocs/auth/auth_bloc.dart';
+import 'package:books_bay/models/auth.dart';
 import 'package:books_bay/models/user.dart';
+import 'package:books_bay/repository/auth_data_provider.dart';
 import 'package:books_bay/repository/login_data_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants.dart';
@@ -18,7 +21,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       try {
         yield LoginLoadingState();
         await _loginAndSave(
-          loginDataProvider: _loginDataProvider,
           user: User(
             email: event.email,
             password: event.password,
@@ -34,19 +36,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield LoginFailedState(message: event.message);
     }
   }
-}
 
-Future _loginAndSave({LoginDataProvider loginDataProvider, User user}) async {
-  final data = await loginDataProvider.login(user);
-  if (data == null) {
-    print(data);
-    throw Error();
-  }
-  final instance = await SharedPreferences.getInstance();
-  final response =
-      await instance.setString(kSharedPreferenceName, json.encode(data));
-  if (!response) {
-    print(response);
-    throw Error();
+  Future _loginAndSave({User user}) async {
+    final data = await _loginDataProvider.login(user);
+    if (data == null) {
+      print(data);
+      throw Error();
+    }
+    await AuthDataProvider.saveAuth(data);
   }
 }

@@ -30,7 +30,7 @@ packages:
     source: hosted
     version: "2.5.0-nullsafety.1"
   bloc:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: bloc
       url: "https://pub.dartlang.org"
@@ -183,6 +183,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.11"
+  dio:
+    dependency: "direct main"
+    description:
+      name: dio
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.10"
   fake_async:
     dependency: transitive
     description:
@@ -216,13 +223,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_advanced_networkimage:
-    dependency: transitive
-    description:
-      name: flutter_advanced_networkimage
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.0"
   flutter_bloc:
     dependency: "direct main"
     description:
@@ -230,20 +230,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.1"
-  flutter_cache_manager:
-    dependency: transitive
-    description:
-      name: flutter_cache_manager
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.3"
-  flutter_plugin_pdf_viewer:
+  flutter_pdfview:
     dependency: "direct main"
     description:
-      name: flutter_plugin_pdf_viewer
+      name: flutter_pdfview
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.7"
+    version: "1.0.4"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -251,13 +244,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.1.2+1"
-  flutter_svg:
-    dependency: transitive
-    description:
-      name: flutter_svg
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.13.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -310,13 +296,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.4"
-  infinite_listview:
-    dependency: transitive
-    description:
-      name: infinite_listview
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1+1"
   intl:
     dependency: transitive
     description:
@@ -401,13 +380,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  numberpicker:
-    dependency: transitive
-    description:
-      name: numberpicker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.0"
   package_config:
     dependency: transitive
     description:
@@ -422,20 +394,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0-nullsafety.1"
-  path_drawing:
-    dependency: transitive
-    description:
-      name: path_drawing
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.1+1"
-  path_parsing:
-    dependency: transitive
-    description:
-      name: path_parsing
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
   path_provider:
     dependency: "direct main"
     description:
@@ -478,13 +436,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.2"
-  petitparser:
-    dependency: transitive
+  percent_indicator:
+    dependency: "direct main"
     description:
-      name: petitparser
+      name: percent_indicator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "2.1.9+1"
   platform:
     dependency: transitive
     description:
@@ -541,13 +499,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
-  rxdart:
-    dependency: transitive
-    description:
-      name: rxdart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.21.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -700,13 +651,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0-nullsafety.3"
-  uuid:
-    dependency: transitive
-    description:
-      name: uuid
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.2"
   vector_math:
     dependency: transitive
     description:
@@ -749,13 +693,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
-  xml:
-    dependency: transitive
-    description:
-      name: xml
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.7.0"
   yaml:
     dependency: transitive
     description:

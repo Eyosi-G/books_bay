@@ -7,11 +7,24 @@ class ImagesSliderWidget extends StatefulWidget {
 }
 
 class _ImagesSliderWidgetState extends State<ImagesSliderWidget> {
-  final _imagesList = [
-    'image_1.jpg',
-    'image_2.jpg',
-    'image_3.jpg',
+  final _quotes = [
+    Quote(
+      image: 'image_1.jpg',
+      quote: "A book is a dream you hold in your hands.",
+      index: 0,
+    ),
+    Quote(
+      image: 'image_2.jpg',
+      quote: "Take a good book to bed with you—books do not snore.",
+      index: 1,
+    ),
+    Quote(
+      image: 'image_3.jpg',
+      quote: "Wear the old coat and buy the new book.",
+      index: 2,
+    ),
   ];
+
   int _current = 0;
   final _controller = CarouselController();
 
@@ -28,16 +41,40 @@ class _ImagesSliderWidgetState extends State<ImagesSliderWidget> {
       child: Stack(
         children: [
           CarouselSlider(
-            items: _imagesList
-                .map(
-                  (image) => Image.asset(
-                    'assets/images/$image',
+            items: _quotes.map((quote) {
+              return Stack(
+                children: [
+                  Image.asset(
+                    'assets/images/${quote.image}',
                     fit: BoxFit.cover,
                     height: double.infinity,
                     width: double.infinity,
                   ),
-                )
-                .toList(),
+                  Positioned.fill(
+                    child: Container(
+                      color: Colors.black54,
+                    ),
+                  ),
+                  Align(
+                    child: Container(
+                      child: Text(
+                        '${quote.quote}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                        ),
+                      ),
+                      margin: EdgeInsets.only(
+                        left: 10,
+                      ),
+                      width: 150,
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                ],
+              );
+            }).toList(),
             carouselController: _controller,
             options: CarouselOptions(
               height: double.infinity,
@@ -50,19 +87,14 @@ class _ImagesSliderWidgetState extends State<ImagesSliderWidget> {
               },
             ),
           ),
-          Positioned.fill(
-            child: Container(
-              color: Colors.black26,
-            ),
-          ),
           Positioned(
             bottom: 10,
             left: 0,
             right: 0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: _imagesList.map((url) {
-                int index = _imagesList.indexOf(url);
+              children: _quotes.map((quote) {
+                int index = quote.index;
                 return Container(
                   width: 8.0,
                   height: 8.0,
@@ -81,4 +113,11 @@ class _ImagesSliderWidgetState extends State<ImagesSliderWidget> {
       ),
     );
   }
+}
+
+class Quote {
+  final String image;
+  final String quote;
+  final int index;
+  Quote({this.image, this.quote, this.index});
 }

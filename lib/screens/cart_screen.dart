@@ -24,7 +24,10 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void didChangeDependencies() {
     _cartBloc = BlocProvider.of<CartBloc>(context);
-    _cartListBloc = CartListBloc(_cartBloc, CartDataProvider());
+    _cartListBloc = CartListBloc(
+      cartBloc: _cartBloc,
+      dataProvider: CartDataProvider(),
+    );
     _cartListBloc.add(FetchedBooks());
 
     super.didChangeDependencies();
@@ -38,7 +41,6 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-//    final books = _cartBloc.books;
     final spinKit = SpinKitThreeBounce(
       color: Colors.black,
       size: 20.0,
@@ -74,8 +76,10 @@ class _CartScreenState extends State<CartScreen> {
                           child: BookTileWidget(books[index]),
                           key: ValueKey(index),
                           background: DismissibleBackgroundWidget(),
-                          confirmDismiss: (direction) {
+                          onDismissed: (direction) async {
                             _cartBloc.add(BookRemovedFromCart(books[index]));
+                          },
+                          confirmDismiss: (direction) async {
                             return Future.value(true);
                           },
                         );

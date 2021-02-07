@@ -1,9 +1,9 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:bloc/bloc.dart';
 import 'package:books_bay/models/book.dart';
 import 'package:books_bay/repository/books_data_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'books_list_event.dart';
 import 'books_list_state.dart';
@@ -28,11 +28,9 @@ class BooksListBloc extends Bloc<BooksListEvent, BooksListState> {
   }
 
   Future _fetchBooks() async {
-    final booksResponse = await _booksDataProvider.fetchBooks();
-    final books = booksResponse
-        .map((bookResponse) => Book.fromJson(bookResponse))
-        .toList();
-    print(json.encode(books));
-    _books = books;
+    final books = await _booksDataProvider.fetchBooks();
+    if (books != null) {
+      _books = books;
+    }
   }
 }

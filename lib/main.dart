@@ -8,6 +8,7 @@ import 'app.dart';
 import 'blocs/auth/auth_bloc.dart';
 import 'blocs/books_list/books_list_bloc.dart';
 import 'blocs/cart/cart_bloc.dart';
+import 'blocs/library/library_bloc.dart';
 import 'blocs/login/login_bloc.dart';
 import 'db_provider/database_provider.dart';
 import 'repository/books_data_provider.dart';
@@ -21,9 +22,6 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider<LoginBloc>(
-          create: (_) => LoginBloc(LoginDataProvider()),
-        ),
         BlocProvider<AuthBloc>(
           create: (_) => AuthBloc(),
         ),
@@ -34,6 +32,9 @@ void main() async {
         ),
         BlocProvider<CartBloc>(
           create: (_) => CartBloc(),
+        ),
+        BlocProvider<LibraryBloc>(
+          create: (_) => LibraryBloc(),
         ),
       ],
       child: App(),

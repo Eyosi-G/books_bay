@@ -1,14 +1,23 @@
-import 'package:bloc/bloc.dart';
+import 'dart:convert';
+
 import 'package:books_bay/blocs/cart_list/cart_list_bloc.dart';
 import 'package:books_bay/blocs/cart_list/cart_list_state.dart';
+import 'package:books_bay/models/auth.dart';
 import 'package:books_bay/models/checkout.dart';
+import 'package:books_bay/repository/auth_data_provider.dart';
+import 'package:books_bay/repository/checkout_data_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../constants.dart';
 import './checkout_state.dart';
 import './checkout_event.dart';
 
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   final CartListBloc _cartListBloc;
+  CheckoutDataProvider _checkoutDataProvider;
   CheckoutBloc(this._cartListBloc) : super(InitialCheckoutState()) {
+    _checkoutDataProvider = CheckoutDataProvider();
     add(CheckoutLoaded());
   }
 
@@ -21,6 +30,10 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       }
       if (event is PayNow) {
         //todo: _generateCheckoutLink()
+        final checkout = event.checkout;
+        yield GeneratingLinkState();
+        final generatedLink = await _generateCheckoutLink(checkout.books);
+        if (generatedLink != null) yield CheckoutLinkGenerated(generatedLink);
       }
     } catch (e) {
       CheckoutErrorState('Error occurred');
@@ -45,7 +58,10 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     return null;
   }
 
-  String _generateCheckoutLink(Checkout checkout) {
-    return '';
+  Future<String> _generateCheckoutLink(List<String> books) async {
+    final auth = await AuthDataProvider.getAuth();
+    final String link =
+        await _checkoutDataProvider.generateLink(books, auth.token);
+    return link;
   }
 }

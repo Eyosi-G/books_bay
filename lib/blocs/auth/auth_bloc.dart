@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:books_bay/models/auth.dart';
+import 'package:books_bay/repository/auth_data_provider.dart';
+import 'package:books_bay/repository/library_data_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants.dart';
@@ -13,17 +16,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   @override
   Stream<AuthState> mapEventToState(AuthEvent event) async* {
     if (event is CheckAuthStatus) {
-//      await _checkCurrentUser();
       await Future.delayed(Duration(seconds: 5));
-      yield AuthenticatedState();
+      yield* _checkCurrentUser();
     }
     if (event is LogoutEvent) {
+      await _logout();
       yield UnAuthenticatedState();
     }
   }
-}
 
-_checkCurrentUser() async {
-  final instance = await SharedPreferences.getInstance();
-  print(json.decode(instance.getString(kSharedPreferenceName)));
+  Stream<AuthState> _checkCurrentUser() async* {
+    try {
+      final auth = await AuthDataProvider.getAuth();
+      if (auth == null) {
+        yield UnAuthenticatedState();
+      } else {
+        await LibraryDataProvider().fetchAndSave();
+        yield AuthenticatedState();
+      }
+    } catch (e) {
+      yield UnAuthenticatedState();
+    }
+  }
+
+  _logout() async {
+    final instance = await SharedPreferences.getInstance();
+    await instance.remove(kSharedPreferenceName);
+  }
 }

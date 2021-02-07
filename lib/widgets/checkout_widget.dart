@@ -1,6 +1,8 @@
 import 'package:books_bay/blocs/cart_list/cart_list_bloc.dart';
 import 'package:books_bay/blocs/checkout/checkout_bloc.dart';
+import 'package:books_bay/blocs/checkout/checkout_event.dart';
 import 'package:books_bay/blocs/checkout/checkout_state.dart';
+import 'package:books_bay/screens/webview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,16 +27,12 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     super.dispose();
   }
 
-  _showLoading() {
-    Navigator.of(context).pop();
-    showDialog(
-      context: context,
-      builder: (ctx) => SimpleDialog(
-        children: [
-          Center(child: CircularProgressIndicator()),
-        ],
-      ),
-    );
+  _payNowHandler() {
+    if (_checkoutBloc.state is CheckoutCompletedState) {
+      final checkout = (_checkoutBloc.state as CheckoutCompletedState).checkout;
+      _checkoutBloc.add(PayNow(checkout));
+//      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -45,8 +43,30 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     return Container(
       padding: EdgeInsets.all(10),
       height: 215,
-      child: BlocBuilder<CheckoutBloc, CheckoutState>(
+      child: BlocConsumer<CheckoutBloc, CheckoutState>(
         cubit: _checkoutBloc,
+        listener: (ctx, state) async {
+//          print('here');
+//          if (state is CheckoutLoadingState) {
+//            showDialog(
+//              context: context,
+//              builder: (ctx) => SimpleDialog(
+//                children: [
+//                  Center(
+//                    child: CircularProgressIndicator(),
+//                  ),
+//                ],
+//              ),
+//            );
+//          }
+          if (state is CheckoutLinkGenerated) {
+            final checkoutLink = state.checkoutLink;
+            await Navigator.of(context).push(
+              MaterialPageRoute(builder: (ctx) => WebViewScreen(checkoutLink)),
+            );
+            Navigator.of(context).pop();
+          }
+        },
         builder: (ctx, state) {
           if (state is InitialCheckoutState) {
             return Center(
@@ -93,14 +113,14 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                   ],
                 ),
                 Container(
-                  child: Image.network(
-                    'https://play-lh.googleusercontent.com/rWi1mhXgIdb9MyOdx-aTNH5A1NfzhsWg3wZOCzkcc_rVYFUITEHDWKYxyc0BD-aXQA',
+                  child: Image.asset(
+                    'assets/images/yenepay.jpg',
                     height: 100,
                   ),
                 ),
                 FlatButton(
                   onPressed: () {
-                    _showLoading();
+                    _payNowHandler();
                   },
                   color: Theme.of(context).buttonColor,
                   child: Text(
@@ -113,9 +133,21 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
               ],
             );
           }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          if (state is GeneratingLinkState) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text('Generating payement link'),
+              ],
+            );
+          }
+          return Container();
         },
       ),
     );

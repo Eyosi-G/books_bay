@@ -31,6 +31,8 @@ class Book {
   final double price;
   final String description;
   final double rating;
+  @JsonKey(name: 'ebook_name')
+  final String bookName;
   final int pages;
   @JsonKey(name: 'cover')
   final String coverImage;
@@ -39,6 +41,7 @@ class Book {
   Book(
       {this.id,
       this.description,
+      this.bookName,
       this.title,
       this.price,
       this.author,

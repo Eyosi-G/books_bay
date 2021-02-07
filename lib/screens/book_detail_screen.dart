@@ -145,7 +145,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       child: Card(
                         elevation: 5,
                         child: Image.network(
-                          Endpoints.imageUrl(widget.book.coverImage),
+                          Endpoints.imageURL(widget.book.coverImage),
                           fit: BoxFit.cover,
                           height: 200,
                         ),
