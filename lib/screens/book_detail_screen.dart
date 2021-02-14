@@ -1,16 +1,15 @@
 import 'dart:ui';
 
 import 'package:books_bay/blocs/books_list/books_list_bloc.dart';
-import 'package:books_bay/blocs/cart/cart_bloc.dart';
-import 'package:books_bay/blocs/cart/cart_event.dart';
-import 'package:books_bay/blocs/cart/cart_state.dart';
-import 'package:books_bay/blocs/in_cart/incart_bloc.dart';
-import 'package:books_bay/blocs/in_cart/incart_event.dart';
-import 'package:books_bay/blocs/in_cart/incart_state.dart';
+import 'package:books_bay/blocs/comments_list/comments_list_bloc.dart';
+import 'package:books_bay/blocs/comments_list/comments_list_event.dart';
+import 'package:books_bay/blocs/comments_list/comments_list_state.dart';
+
 import 'package:books_bay/models/book.dart';
 import 'package:books_bay/models/comment.dart';
-import 'package:books_bay/widgets/bag_wrapper.dart';
-import 'package:books_bay/widgets/category_chip.dart';
+import 'package:books_bay/data_provider/comment_data_provider.dart';
+import 'package:books_bay/repositories/auth_repository.dart';
+import 'package:books_bay/repositories/comment_repository.dart';
 import 'package:books_bay/widgets/review_tile.dart';
 import 'package:books_bay/widgets/write_review_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../constants.dart';
 
 class BookDetailScreen extends StatefulWidget {
+  static const routeName = "detail_screen";
   final Book book;
 
   BookDetailScreen(this.book);
@@ -27,89 +27,34 @@ class BookDetailScreen extends StatefulWidget {
 }
 
 class _BookDetailScreenState extends State<BookDetailScreen> {
-  CartBloc _cartBloc;
-  InCartBloc _inCartBloc = InCartBloc();
+  CommentsListBloc _commentsListBloc;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  void didChangeDependencies() {
-    _cartBloc = BlocProvider.of<CartBloc>(context);
-    _inCartBloc.add(CheckInCartEvent(widget.book));
-    super.didChangeDependencies();
+  void dispose() {
+    _commentsListBloc.close();
+    super.dispose();
   }
 
-  _addToBag() {
-    _cartBloc.add(
-      BookAddedToCart(widget.book),
+  @override
+  void didChangeDependencies() {
+    _commentsListBloc = CommentsListBloc(
+      commentRepository: context.read<CommentRepository>(),
     );
-    _inCartBloc.add(
-      CheckInCartEvent(widget.book),
-    );
+    _commentsListBloc.add(FetchComments(widget.book.id));
+    super.didChangeDependencies();
   }
 
   _openReview() {
     _scaffoldKey.currentState.showBottomSheet(
-      (context) => WriteReviewScreen(),
-      elevation: 10,
-    );
-  }
-
-  _bottomTile() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '${widget.book.price.toStringAsFixed(2)} ETB',
-              style: Theme.of(context).textTheme.bodyText1.copyWith(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    color: Theme.of(context).primaryColor,
-                  ),
-              overflow: TextOverflow.ellipsis,
-            ),
-            BlocBuilder<InCartBloc, InCartState>(
-              cubit: _inCartBloc,
-              builder: (ctx, state) {
-                if (state is InCartStateChanged) {
-                  if (state.isInCart) {
-                    return FlatButton.icon(
-                      color: Theme.of(context).primaryColor,
-                      onPressed: null,
-                      label: Text('Add To Bag'),
-                      disabledColor: Colors.grey,
-                      icon: Icon(
-                        Icons.shopping_bag,
-                        color: Colors.white,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      textColor: Colors.white,
-                    );
-                  }
-                }
-                return FlatButton.icon(
-                  color: Theme.of(context).primaryColor,
-                  onPressed: _addToBag,
-                  label: Text('Add To Bag'),
-                  disabledColor: Colors.grey,
-                  icon: Icon(
-                    Icons.shopping_bag,
-                    color: Colors.white,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  textColor: Colors.white,
-                );
-              },
-            )
-          ],
+      (context) => BlocProvider.value(
+        value: _commentsListBloc,
+        child: WriteReviewScreen(
+          bookId: widget.book.id,
         ),
-      ],
+      ),
+      elevation: 10,
+      backgroundColor: Color(0xfff7f7e8),
     );
   }
 
@@ -124,9 +69,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           color: Colors.black,
         ),
         backgroundColor: Colors.transparent,
-        actions: [
-          BagWrapper(),
-        ],
+        actions: [],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -185,14 +128,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             color: Colors.black54,
                           ),
                       textAlign: TextAlign.justify,
-//                      softWrap: true,
-                    ),
-                    SizedBox(height: 10),
-                    Wrap(
-                      spacing: 3,
-                      children: widget.book.genre
-                          .map((_genre) => CategoryChip(category: _genre))
-                          .toList(),
                     ),
                     SizedBox(
                       height: 10,
@@ -209,7 +144,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                         ),
                         IconButton(
                           icon: Icon(
-                            Icons.add,
+                            Icons.add_circle,
                             size: 25,
                           ),
                           color: Theme.of(context).primaryColor,
@@ -218,16 +153,36 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       ],
                     ),
                     SizedBox(height: 10),
-                    Column(
-                      children: widget.book.comments
-                          .map((comment) => ReviewTile())
-                          .toList(),
-                    ),
+                    BlocBuilder<CommentsListBloc, CommentsListState>(
+                      cubit: _commentsListBloc,
+                      builder: (ctx, state) {
+                        if (state is LoadingCommentState) {
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                        if (state is CommentsLoadedState) {
+                          return Column(
+                            children: state.comments
+                                .map((comment) => BlocProvider.value(
+                                      child: ReviewTile(
+                                        comment: comment,
+                                        bookId: widget.book.id,
+                                      ),
+                                      value: _commentsListBloc,
+                                    ))
+                                .toList(),
+                          );
+                        }
+
+                        return Container();
+                      },
+                    )
                   ],
                 ),
               ),
             ),
-            _bottomTile(),
           ],
         ),
       ),

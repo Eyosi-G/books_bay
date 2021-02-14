@@ -4,7 +4,9 @@ import 'package:books_bay/blocs/login/login_bloc.dart';
 import 'package:books_bay/blocs/login/login_event.dart';
 import 'package:books_bay/blocs/login/login_state.dart';
 import 'package:books_bay/models/user.dart';
-import 'package:books_bay/repository/login_data_provider.dart';
+import 'package:books_bay/data_provider/login_data_provider.dart';
+import 'package:books_bay/repositories/auth_repository.dart';
+import 'package:books_bay/repositories/login_repository.dart';
 import 'package:books_bay/widgets/bottom_navigation_bar_widget.dart';
 import 'package:books_bay/widgets/custom_app_bar.dart';
 import 'package:books_bay/widgets/images_slider_widget.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
+  static const routeName = "loginScreen";
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -53,7 +56,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void didChangeDependencies() {
-    _loginBloc = LoginBloc(LoginDataProvider());
+    _loginBloc = LoginBloc(
+      loginRepository: RepositoryProvider.of<LoginRepository>(context),
+      authRepository: RepositoryProvider.of<AuthRepository>(context),
+    );
     super.didChangeDependencies();
   }
 
@@ -84,6 +90,9 @@ class _LoginScreenState extends State<LoginScreen> {
             return Center(
               child: CircularProgressIndicator(),
             );
+          }
+          if (state is LoginFailedState) {
+            return Center(child: Text('Login failed'));
           }
           if (state is LoginLoadingState) {
             return Center(

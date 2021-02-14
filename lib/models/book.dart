@@ -14,44 +14,49 @@ genre,
 
 
  */
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'comment.dart';
 
-part 'book.g.dart';
-
-@JsonSerializable(explicitToJson: true)
-class Book {
-  @JsonKey(name: '_id')
+class Book extends Equatable {
   final String id;
   final String title;
-  @JsonKey(name: 'is_best_seller')
   final bool isBestSeller;
   final String author;
-  final double price;
   final String description;
-  final double rating;
-  @JsonKey(name: 'ebook_name')
-  final String bookName;
-  final int pages;
-  @JsonKey(name: 'cover')
   final String coverImage;
-  final List<String> genre;
-  final List<Comment> comments;
-  Book(
-      {this.id,
-      this.description,
-      this.bookName,
-      this.title,
-      this.price,
-      this.author,
-      this.coverImage,
-      this.genre,
-      this.isBestSeller,
-      this.pages,
-      this.rating,
-      this.comments});
+  Book({
+    this.id,
+    this.description,
+    this.title,
+    this.author,
+    this.coverImage,
+    this.isBestSeller,
+  });
 
-  factory Book.fromJson(Map<String, dynamic> json) => _$BookFromJson(json);
-  Map<String, dynamic> toJson() => _$BookToJson(this);
+  factory Book.fromJson(Map<String, dynamic> json) {
+    return Book(
+      id: json["_id"],
+      title: json["title"],
+      author: json["author"],
+      description: json["description"],
+      coverImage: json["cover"],
+      isBestSeller: json["isBestSeller"] as bool,
+    );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      "_id": id,
+      "title": title,
+      "author": author,
+      "description": description,
+      "cover": coverImage,
+      "isBestSeller": isBestSeller,
+    };
+  }
+
+  @override
+  List<Object> get props =>
+      [id, title, author, description, coverImage, isBestSeller];
 }

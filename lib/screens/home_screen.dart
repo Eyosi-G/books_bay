@@ -4,48 +4,27 @@ import 'package:books_bay/blocs/books_list/books_list_bloc.dart';
 import 'package:books_bay/blocs/books_list/books_list_event.dart';
 import 'package:books_bay/blocs/books_list/books_list_state.dart';
 import 'package:books_bay/models/book.dart';
-import 'package:books_bay/repository/books_data_provider.dart';
-import 'package:books_bay/widgets/bag_wrapper.dart';
+import 'package:books_bay/data_provider/books_data_provider.dart';
 import 'package:books_bay/widgets/book_card_widget.dart';
 import 'package:books_bay/widgets/book_tile_widget.dart';
-import 'package:books_bay/widgets/category_lists_widget.dart';
+import 'package:books_bay/widgets/failed_reload_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'book_detail_screen.dart';
-import 'cart_screen.dart';
-import 'orders_screen.dart';
 import '../blocs/auth/auth_event.dart';
 
-enum Selected { orders, logout }
+enum Select { LOGOUT }
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  BooksListBloc _booksListBloc;
-  AuthBloc _authBloc;
-
-  @override
-  void didChangeDependencies() {
-    _booksListBloc = BlocProvider.of<BooksListBloc>(context);
-    _authBloc = BlocProvider.of<AuthBloc>(context);
-    if (_booksListBloc.books.isEmpty) {
-      _booksListBloc.add(FetchedBooks());
-    }
-    super.didChangeDependencies();
-  }
-
-  _navigateToDetail(Book book) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) {
-          return BookDetailScreen(book);
-        },
-      ),
+class HomeScreen extends StatelessWidget {
+  _navigateToDetail({
+    @required Book book,
+    @required BuildContext context,
+  }) {
+    Navigator.of(context).pushNamed(
+      BookDetailScreen.routeName,
+      arguments: book,
     );
   }
 
@@ -66,35 +45,20 @@ class _HomeScreenState extends State<HomeScreen> {
           color: Colors.black,
         ),
         actions: [
-          BagWrapper(),
           PopupMenuButton(
             itemBuilder: (ctx) {
               return [
                 PopupMenuItem(
                   child: Text(
-                    'Orders',
-                  ),
-                  value: Selected.orders,
-                ),
-                PopupMenuItem(
-                  child: Text(
                     'Logout',
                   ),
-                  value: Selected.logout,
+                  value: Select.LOGOUT,
                 )
               ];
             },
-            onSelected: (Selected selected) {
-              if (selected == Selected.orders) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (ctx) {
-                      return OrdersScreen();
-                    },
-                  ),
-                );
-              } else if (selected == Selected.logout) {
-                _authBloc.add(LogoutEvent());
+            onSelected: (selected) {
+              if (selected == Select.LOGOUT) {
+                context.read<AuthBloc>().add(LogoutEvent());
               }
             },
           ),
@@ -102,7 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: BlocBuilder<BooksListBloc, BooksListState>(
         builder: (ctx, state) {
-          print(state);
           if (state is InitialBooksListState) {
             return Center(
               child: spinKit,
@@ -114,33 +77,13 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }
           if (state is BooksListFetchFailedState) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Image.asset(
-                    'assets/images/floading_failed.png',
-                    width: 70,
-                    height: 70,
-                  ),
-                ),
-                Center(
-                  child: Text('Loading Failed'),
-                ),
-                SizedBox(height: 10),
-                OutlineButton(
-                  onPressed: () {
-                    _booksListBloc.add(FetchedBooks());
-                  },
-                  child: Text('Reload'),
-                ),
-              ],
-            );
+            return FailedReloadWidget(() {
+              context.read<BooksListBloc>().add(FetchedBooks());
+            });
           }
           if (state is BooksListFetchedState) {
-            final books = _booksListBloc.books;
-            final bestSellers =
-                books?.where((book) => book.isBestSeller)?.toList();
+            final books = state.books;
+            final bestSellers = state.bestSellers;
             if (books.isEmpty) {
               return Text('no books');
             } else {
@@ -165,8 +108,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: bestSellers.length,
                           itemBuilder: (ctx, index) {
                             return GestureDetector(
-                              onTap: () =>
-                                  _navigateToDetail(bestSellers[index]),
+                              onTap: () => _navigateToDetail(
+                                book: bestSellers[index],
+                                context: context,
+                              ),
                               child: BookCardWidget(
                                 height: height * 0.28,
                                 width: width * 0.4,
@@ -189,7 +134,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListView.separated(
                           itemBuilder: (ctx, index) {
                             return GestureDetector(
-                              onTap: () => _navigateToDetail(books[index]),
+                              onTap: () => _navigateToDetail(
+                                book: books[index],
+                                context: context,
+                              ),
                               child: BookTileWidget(books[index]),
                             );
                           },

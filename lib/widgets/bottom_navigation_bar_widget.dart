@@ -1,5 +1,8 @@
+import 'package:books_bay/blocs/auth/auth_bloc.dart';
+import 'package:books_bay/blocs/auth/auth_event.dart';
 import 'package:books_bay/screens/search_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../screens/library_books_screen.dart';
 import '../screens/home_screen.dart';
 
@@ -17,6 +20,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
   ];
   int _currentIndex = 0;
   _changeScreens(int index) {
+    //BlocProvider.of<AuthBloc>(context).add(CheckAuthExpires());
     setState(() {
       _currentIndex = index;
     });

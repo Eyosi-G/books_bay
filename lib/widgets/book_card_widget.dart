@@ -1,6 +1,8 @@
 import 'package:books_bay/models/book.dart';
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
+
 class BookCardWidget extends StatelessWidget {
   final double height;
   final double width;
@@ -31,7 +33,7 @@ class BookCardWidget extends StatelessWidget {
               elevation: 5,
               margin: EdgeInsets.zero,
               child: Image.network(
-                'https://ebooks-bay.herokuapp.com/api/v1/images/$coverImage',
+                Endpoints.imageURL(coverImage),
                 fit: BoxFit.cover,
                 height: height,
                 width: width,

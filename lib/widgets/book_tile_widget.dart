@@ -45,38 +45,6 @@ class BookTileWidget extends StatelessWidget {
                       ),
                   overflow: TextOverflow.ellipsis,
                 ),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.star,
-                          color: Colors.deepOrange,
-                          size: 18,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          '${book.rating}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .copyWith(fontWeight: FontWeight.w300),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      '${book.price.toStringAsFixed(2)} ETB',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(fontWeight: FontWeight.w300),
-                    )
-                  ],
-                ),
               ],
             ),
           ),

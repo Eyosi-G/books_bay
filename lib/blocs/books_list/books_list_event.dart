@@ -1,3 +1,8 @@
-abstract class BooksListEvent {}
+import 'package:equatable/equatable.dart';
 
-class FetchedBooks extends BooksListEvent {}
+abstract class BooksListEvent extends Equatable {}
+
+class FetchedBooks extends BooksListEvent {
+  @override
+  List<Object> get props => [];
+}

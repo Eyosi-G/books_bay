@@ -1,9 +1,11 @@
-class Auth {
+import 'package:equatable/equatable.dart';
+
+class Auth extends Equatable {
   final String token;
   final String id;
   DateTime exp;
   Auth({this.id, this.token, this.exp}) {
-    this.exp = DateTime.now().add(Duration(hours: 1));
+    if (this.exp == null) this.exp = DateTime.now().add(Duration(hours: 1));
   }
   factory Auth.fromJson(Map<String, dynamic> json) {
     return Auth(
@@ -25,4 +27,7 @@ class Auth {
       'exp': exp.toIso8601String(),
     };
   }
+
+  @override
+  List<Object> get props => [id, token, exp];
 }

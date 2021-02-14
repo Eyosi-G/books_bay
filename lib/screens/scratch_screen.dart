@@ -1,7 +1,4 @@
-import 'package:books_bay/db_provider/database_provider.dart';
-import 'package:books_bay/models/db_models/db_models.dart';
 import 'package:flutter/material.dart';
-import './webview_screen.dart';
 
 class ScratchScreen extends StatefulWidget {
 //  loadBook(BuildContext context) {

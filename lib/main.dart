@@ -1,43 +1,47 @@
 import 'dart:io';
 
+import 'package:books_bay/data_provider/comment_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
 import 'app.dart';
-import 'blocs/auth/auth_bloc.dart';
-import 'blocs/books_list/books_list_bloc.dart';
-import 'blocs/cart/cart_bloc.dart';
-import 'blocs/library/library_bloc.dart';
-import 'blocs/login/login_bloc.dart';
-import 'db_provider/database_provider.dart';
-import 'repository/books_data_provider.dart';
-import 'repository/login_data_provider.dart';
-import 'screens/scratch_screen.dart';
+import 'data_provider/auth_data_provider.dart';
+import 'data_provider/books_data_provider.dart';
+import 'data_provider/library_data_provider.dart';
+import 'data_provider/login_data_provider.dart';
+import 'repositories/auth_repository.dart';
+import 'repositories/books_respository.dart';
+import 'repositories/comment_repository.dart';
+import 'repositories/library_repository.dart';
+import 'repositories/login_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Directory directory = await getApplicationDocumentsDirectory();
-  Hive.init(directory.path);
   runApp(
-    MultiBlocProvider(
+    MultiRepositoryProvider(
       providers: [
-        BlocProvider<AuthBloc>(
-          create: (_) => AuthBloc(),
+        RepositoryProvider(
+          create: (_) => BooksRepository(BooksDataProvider()),
         ),
-        BlocProvider<BooksListBloc>(
-          create: (_) => BooksListBloc(
-            BooksDataProvider(),
+        RepositoryProvider(
+          create: (_) => AuthRepository(AuthDataProvider()),
+        ),
+        RepositoryProvider(
+          create: (_) => LoginRepository(LoginDataProvider()),
+        ),
+        RepositoryProvider(
+          create: (_) => CommentRepository(
+            authDataProvider: AuthDataProvider(),
+            commentDataProvider: CommentDataProvider(),
           ),
         ),
-        BlocProvider<CartBloc>(
-          create: (_) => CartBloc(),
-        ),
-        BlocProvider<LibraryBloc>(
-          create: (_) => LibraryBloc(),
-        ),
+        RepositoryProvider(
+          create: (_) => LibraryRepository(
+            libraryDataProvider: LibraryDataProvider(),
+            authDataProvider: AuthDataProvider(),
+          ),
+        )
       ],
-      child: App(),
+      child: StarterApp(),
     ),
   );
 }
