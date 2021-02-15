@@ -14,8 +14,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'book_detail_screen.dart';
 import '../blocs/auth/auth_event.dart';
+import 'screens.dart';
 
-enum Select { LOGOUT }
+enum Select { SETTING, LOGOUT }
 
 class HomeScreen extends StatelessWidget {
   _navigateToDetail({
@@ -50,6 +51,12 @@ class HomeScreen extends StatelessWidget {
               return [
                 PopupMenuItem(
                   child: Text(
+                    'Settings',
+                  ),
+                  value: Select.SETTING,
+                ),
+                PopupMenuItem(
+                  child: Text(
                     'Logout',
                   ),
                   value: Select.LOGOUT,
@@ -59,6 +66,10 @@ class HomeScreen extends StatelessWidget {
             onSelected: (selected) {
               if (selected == Select.LOGOUT) {
                 context.read<AuthBloc>().add(LogoutEvent());
+              }
+
+              if (selected == Select.SETTING) {
+                Navigator.of(context).pushNamed(SettingScreen.routeName);
               }
             },
           ),

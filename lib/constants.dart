@@ -23,6 +23,11 @@ class Endpoints {
   static final updateComment = '$baseUrl/comments';
   static final getComment = (String bookId, String commentId) =>
       '$baseUrl/books/$bookId/comments/$commentId';
+
+  //user
+  static final getAccount = (String userId) => '$baseUrl/users/$userId';
+  static final deleteAccount = (String userId) => '$baseUrl/users/$userId';
+  static final updateAccount = '$baseUrl/users';
 }
 
 const kSharedPreferenceName = "user_data";
