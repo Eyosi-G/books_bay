@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../app.dart';
 import './screens.dart';
-import '../widgets/bottom_navigation_bar_widget.dart';
 
-class BooksRoute {
+class ScreensRoute {
   static Route<dynamic> generateRoutes(RouteSettings settings) {
     if (settings.name == "/") {
       return MaterialPageRoute(
@@ -26,6 +25,11 @@ class BooksRoute {
     if (settings.name == SettingScreen.routeName) {
       return MaterialPageRoute(
         builder: (_) => SettingScreen(),
+      );
+    }
+    if (settings.name == SignUpScreen.routeName) {
+      return MaterialPageRoute(
+        builder: (_) => SignUpScreen(),
       );
     }
   }

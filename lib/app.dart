@@ -56,11 +56,15 @@ class StarterApp extends StatelessWidget {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<LibraryBloc>(
-      create: (_) => LibraryBloc(
-          booksListBloc: context.read<BooksListBloc>(),
-          libraryRepository: context.read<LibraryRepository>())
-        ..add(FetchBooksEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => LibraryBloc(
+              booksListBloc: context.read<BooksListBloc>(),
+              libraryRepository: context.read<LibraryRepository>())
+            ..add(FetchBooksEvent()),
+        ),
+      ],
       child: MaterialApp(
         title: 'Book Bay',
         debugShowCheckedModeBanner: false,
@@ -79,7 +83,7 @@ class App extends StatelessWidget {
             ),
           ),
         ),
-        onGenerateRoute: BooksRoute.generateRoutes,
+        onGenerateRoute: ScreensRoute.generateRoutes,
       ),
     );
   }

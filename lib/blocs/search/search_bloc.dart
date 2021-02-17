@@ -1,14 +1,13 @@
-import 'package:books_bay/data_provider/search_data_provider.dart';
+import 'package:books_bay/repositories/repositories.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'search_event.dart';
-import 'search_state.dart';
+import 'search.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-  final SearchDataProvider searchDataProvider;
-  SearchBloc({@required this.searchDataProvider}) : super(InitialSearchState());
+  final SearchRepository searchRepository;
+  SearchBloc({@required this.searchRepository}) : super(InitialSearchState());
 
   @override
   Stream<SearchState> mapEventToState(SearchEvent event) async* {
@@ -19,8 +18,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Stream<SearchState> _search(String text) async* {
     yield SearchLoadingState();
-
-    final books = await searchDataProvider.search(filter: "", text: text);
+    final books = await searchRepository.search(text);
     yield SearchChanged(books);
   }
 

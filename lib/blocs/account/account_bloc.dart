@@ -1,8 +1,7 @@
-import 'package:books_bay/blocs/auth/auth_bloc.dart';
-import 'package:books_bay/blocs/auth/auth_event.dart';
 import 'package:books_bay/repositories/account_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../blocs.dart';
 
 import 'account.dart';
 

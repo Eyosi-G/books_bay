@@ -7,7 +7,7 @@ import '../constants.dart';
 
 class LoginDataProvider {
   Future login(User user) async {
-    final user = User(email: "kebede@gmail.com", password: "kebede_password");
+//    final user = User(email: "kebede@gmail.com", password: "kebede_password");
     final client = Client();
     final response = await client.post(
       Endpoints.loginURL,

@@ -1,14 +1,7 @@
-import 'package:books_bay/models/comment.dart';
-import 'package:books_bay/models/user.dart';
-import 'package:books_bay/data_provider/auth_data_provider.dart';
-import 'package:books_bay/data_provider/comment_data_provider.dart';
-import 'package:books_bay/repositories/auth_repository.dart';
-import 'package:books_bay/repositories/comment_repository.dart';
+import 'package:books_bay/repositories/repositories.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'comments_list_event.dart';
-import 'comments_list_state.dart';
+import 'comments_list.dart';
 
 class CommentsListBloc extends Bloc<CommentsListEvent, CommentsListState> {
   final CommentRepository commentRepository;

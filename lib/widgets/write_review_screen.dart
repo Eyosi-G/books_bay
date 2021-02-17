@@ -1,7 +1,4 @@
-import 'package:books_bay/blocs/comments_list/comments_list_bloc.dart';
-import 'package:books_bay/blocs/comments_list/comments_list_event.dart';
-import 'package:books_bay/models/comment.dart';
-import 'package:books_bay/models/user.dart';
+import 'package:books_bay/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -63,87 +60,81 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
         color: Colors.black38,
       ),
     );
-    final height = MediaQuery.of(context).size.height;
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(
-        child: Form(
-          key: _globalKey,
-          child: Container(
-            height: height * 0.7,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 4,
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+      child: Form(
+        key: _globalKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 4,
+              width: MediaQuery.of(context).size.width * 0.3,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black,
                 ),
-                Expanded(child: Container()),
-                Align(
-                  child: Text(
-                    'Write a review',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  alignment: Alignment.centerLeft,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            SizedBox(height: 60),
+            Align(
+              child: Text(
+                'Write a review',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
                 ),
-                SizedBox(height: 10),
-                TextFormField(
-                  initialValue: widget.edit ? widget.comment : null,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 6,
-                  minLines: 6,
-                  decoration: InputDecoration(
-                    border: focusBorder,
-                    filled: true,
-                    focusColor: Colors.black,
-                    focusedBorder: focusBorder,
+              ),
+              alignment: Alignment.centerLeft,
+            ),
+            SizedBox(height: 10),
+            TextFormField(
+              initialValue: widget.edit ? widget.comment : null,
+              keyboardType: TextInputType.multiline,
+              maxLines: 6,
+              minLines: 6,
+              decoration: InputDecoration(
+                border: focusBorder,
+                filled: true,
+                focusColor: Colors.black,
+                focusedBorder: focusBorder,
+              ),
+              onSaved: (val) {
+                setState(() {
+                  _comment = val;
+                });
+              },
+              validator: (val) => val.isEmpty ? "review is empty" : null,
+            ),
+            SizedBox(height: 10),
+            Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Row(
+                children: [
+                  Spacer(),
+                  OutlineButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Cancel'),
                   ),
-                  onSaved: (val) {
-                    setState(() {
-                      _comment = val;
-                    });
-                  },
-                ),
-                Row(
-                  children: [
-                    Spacer(),
-                    OutlineButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Cancel'),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    RaisedButton(
-                      onPressed: _saveHandler,
-                      color: Theme.of(context).primaryColor,
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  RaisedButton(
+                    onPressed: _saveHandler,
+                    color: Theme.of(context).primaryColor,
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                        color: Colors.white,
                       ),
                     ),
-                  ],
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Container(),
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

@@ -1,25 +1,17 @@
-import 'dart:convert';
-
-import 'package:bloc/bloc.dart';
-import 'package:books_bay/blocs/auth/auth_bloc.dart';
-import 'package:books_bay/models/auth.dart';
-import 'package:books_bay/models/user.dart';
-import 'package:books_bay/data_provider/auth_data_provider.dart';
-import 'package:books_bay/data_provider/login_data_provider.dart';
-import 'package:books_bay/repositories/auth_repository.dart';
-import 'package:books_bay/repositories/login_repository.dart';
+import 'package:books_bay/models/models.dart';
+import 'package:books_bay/repositories/repositories.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../constants.dart';
-import 'login_event.dart';
-import 'login_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../blocs.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginRepository loginRepository;
   AuthRepository authRepository;
+  AuthBloc authBloc;
   LoginBloc({
     @required this.loginRepository,
     @required this.authRepository,
+    @required this.authBloc,
   }) : super(InitialLoginState());
 
   @override
@@ -38,13 +30,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             password: event.password,
           ),
         );
-        yield LoginSucceedState();
       }
       if (event is FailedLoginEvent) {
         yield LoginFailedState(message: event.message);
       }
     } catch (e) {
-      print(e);
+      await Future.delayed(Duration(seconds: 2));
       yield LoginFailedState(message: 'failed on network');
     }
   }
@@ -52,5 +43,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future _loginAndSave({User user}) async {
     final data = await loginRepository.login(user);
     await authRepository.saveAuth(data);
+    authBloc.add(CheckAuthStatus());
   }
 }

@@ -1,14 +1,11 @@
 import 'dart:ui';
 
-import 'package:books_bay/blocs/books_list/books_list_bloc.dart';
 import 'package:books_bay/blocs/comments_list/comments_list_bloc.dart';
 import 'package:books_bay/blocs/comments_list/comments_list_event.dart';
 import 'package:books_bay/blocs/comments_list/comments_list_state.dart';
 
 import 'package:books_bay/models/book.dart';
-import 'package:books_bay/models/comment.dart';
-import 'package:books_bay/data_provider/comment_data_provider.dart';
-import 'package:books_bay/repositories/auth_repository.dart';
+
 import 'package:books_bay/repositories/comment_repository.dart';
 import 'package:books_bay/widgets/review_tile.dart';
 import 'package:books_bay/widgets/write_review_screen.dart';
@@ -46,15 +43,21 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   }
 
   _openReview() {
-    _scaffoldKey.currentState.showBottomSheet(
-      (context) => BlocProvider.value(
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(10),
+          topLeft: Radius.circular(10),
+        ),
+      ),
+      isScrollControlled: true,
+      builder: (_) => BlocProvider.value(
         value: _commentsListBloc,
         child: WriteReviewScreen(
           bookId: widget.book.id,
         ),
       ),
-      elevation: 10,
-      backgroundColor: Color(0xfff7f7e8),
     );
   }
 

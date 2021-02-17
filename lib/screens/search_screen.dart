@@ -1,12 +1,11 @@
-import 'package:books_bay/blocs/search/search_bloc.dart';
-import 'package:books_bay/blocs/search/search_event.dart';
-import 'package:books_bay/blocs/search/search_state.dart';
-import 'package:books_bay/data_provider/search_data_provider.dart';
-import 'package:books_bay/widgets/book_tile_widget.dart';
+import 'package:books_bay/blocs/blocs.dart';
+import 'package:books_bay/data_provider/data_providers.dart';
+import 'package:books_bay/repositories/repositories.dart';
+import 'package:books_bay/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'book_detail_screen.dart';
+import 'screens.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -18,7 +17,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     _searchBloc = SearchBloc(
-      searchDataProvider: SearchDataProvider(),
+      searchRepository: SearchRepository(SearchDataProvider()),
     );
     super.initState();
   }
@@ -40,7 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
         title: TextField(
           autofocus: true,
           onChanged: (val) {
-            _searchBloc.add(Search(val));
+            if (val.isNotEmpty) _searchBloc.add(Search(val));
           },
           decoration: InputDecoration(
             contentPadding: EdgeInsets.all(10),

@@ -14,7 +14,6 @@ class AccountEditWidget extends StatefulWidget {
 class _AccountEditWidgetState extends State<AccountEditWidget> {
   final Map<String, String> _formData = {
     "username": "",
-    "email": "",
   };
   GlobalKey<FormState> _globalKey = GlobalKey();
   _saveEditAccount(BuildContext context) {
@@ -22,7 +21,6 @@ class _AccountEditWidgetState extends State<AccountEditWidget> {
       _globalKey.currentState.save();
       final user = User(
         username: _formData["username"],
-        email: _formData["email"],
       );
       context.read<AccountBloc>().add(EditAccountEvent(user));
       Navigator.of(context).pop();
@@ -46,25 +44,17 @@ class _AccountEditWidgetState extends State<AccountEditWidget> {
             Text('Edit Account Information'),
             SizedBox(height: 20),
             Text('UserName', style: title),
-            TextFormField(
-              initialValue: widget.user.username,
-              validator: (val) =>
-                  val.isEmpty ? 'Username field can\'t be empty' : null,
-              onSaved: (val) => _formData["username"] = val,
-            ),
-            SizedBox(height: 20),
-            Text('Email', style: title),
             Padding(
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom + 10,
               ),
               child: TextFormField(
-                initialValue: widget.user.email,
-                validator: (val) =>
-                    val.isEmpty ? 'Email field can\'t be empty' : null,
-                onSaved: (val) => _formData["email"] = val,
+                initialValue: widget.user.username,
+                validator: (val) => val.isEmpty ? '' : null,
+                onSaved: (val) => _formData["username"] = val,
               ),
             ),
+            SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

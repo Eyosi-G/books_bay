@@ -95,9 +95,15 @@ class LibraryTile extends StatelessWidget {
           },
         ),
       ),
-      child: Image.network(
-        Endpoints.imageURL(book.coverImage),
-        fit: BoxFit.cover,
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context)
+              .pushNamed(BookDetailScreen.routeName, arguments: book);
+        },
+        child: Image.network(
+          Endpoints.imageURL(book.coverImage),
+          fit: BoxFit.cover,
+        ),
       ),
     );
     ;

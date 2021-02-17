@@ -22,6 +22,20 @@ class AccountDataProvider {
     }
   }
 
+  Future createAccount({@required User user}) async {
+    final client = Client();
+    final response = await client.post(
+      Endpoints.registerURL,
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: json.encode(user.toJson()),
+    );
+    if (!(response.statusCode < 300 && response.statusCode >= 200)) {
+      throw Exception("response failed");
+    }
+  }
+
   Future updateAccount({@required String token, @required User user}) async {
     final client = Client();
     final response = await client.put(

@@ -1,4 +1,3 @@
-import 'package:books_bay/models/book.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';

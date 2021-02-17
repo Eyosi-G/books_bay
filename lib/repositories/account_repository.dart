@@ -16,6 +16,10 @@ class AccountRepository {
     );
   }
 
+  Future createAccount({@required User user}) async {
+    return await accountDataProvider.createAccount(user: user);
+  }
+
   Future updateAccount(User user) async {
     final auth = await authDataProvider.getAuth();
     await accountDataProvider.updateAccount(token: auth.token, user: user);

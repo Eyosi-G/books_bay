@@ -1,14 +1,8 @@
-import 'dart:collection';
-import 'dart:convert';
-
-import 'package:books_bay/models/book.dart';
-import 'package:books_bay/data_provider/books_data_provider.dart';
+import 'package:books_bay/models/models.dart';
 import 'package:books_bay/repositories/books_respository.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'books_list_event.dart';
-import 'books_list_state.dart';
+import 'books_list.dart';
 
 class BooksListBloc extends Bloc<BooksListEvent, BooksListState> {
   List<Book> _books = List<Book>();

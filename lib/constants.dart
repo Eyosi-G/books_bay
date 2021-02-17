@@ -1,4 +1,4 @@
-final baseUrl = "http://192.168.1.8:8080/api/v1";
+final baseUrl = "http://192.168.1.7:8080/api/v1";
 
 class Endpoints {
   static final loginURL = '$baseUrl/login';

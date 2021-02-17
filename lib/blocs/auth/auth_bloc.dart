@@ -1,15 +1,9 @@
-import 'dart:convert';
-
-import 'package:bloc/bloc.dart';
-import 'package:books_bay/models/auth.dart';
-import 'package:books_bay/data_provider/auth_data_provider.dart';
-import 'package:books_bay/data_provider/library_data_provider.dart';
-import 'package:books_bay/repositories/auth_repository.dart';
+import 'package:books_bay/repositories/repositories.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants.dart';
-import 'auth_event.dart';
-import 'auth_state.dart';
+import '../blocs.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;

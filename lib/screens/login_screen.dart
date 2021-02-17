@@ -1,17 +1,9 @@
-import 'package:books_bay/blocs/auth/auth_bloc.dart';
-import 'package:books_bay/blocs/auth/auth_event.dart';
-import 'package:books_bay/blocs/login/login_bloc.dart';
-import 'package:books_bay/blocs/login/login_event.dart';
-import 'package:books_bay/blocs/login/login_state.dart';
-import 'package:books_bay/models/user.dart';
-import 'package:books_bay/data_provider/login_data_provider.dart';
-import 'package:books_bay/repositories/auth_repository.dart';
-import 'package:books_bay/repositories/login_repository.dart';
-import 'package:books_bay/widgets/bottom_navigation_bar_widget.dart';
-import 'package:books_bay/widgets/custom_app_bar.dart';
-import 'package:books_bay/widgets/images_slider_widget.dart';
+import 'package:books_bay/blocs/blocs.dart';
+import 'package:books_bay/repositories/repositories.dart';
+import 'package:books_bay/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'screens.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = "loginScreen";
@@ -26,45 +18,39 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String _email = '';
   String _password = '';
-  AutovalidateMode _formChanged = AutovalidateMode.disabled;
+  bool _isObscure = true;
+  BuildContext _dialogContext;
 
-  InputDecoration _decoration(String labelText, String hintText) {
-    return InputDecoration(
-      labelText: labelText,
-      hintText: hintText,
-      labelStyle: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-      ),
-      hintStyle: TextStyle(
-        fontSize: 12,
-      ),
-    );
+  _createAccount() {
+    Navigator.of(context).pushNamed(SignUpScreen.routeName);
   }
-
-  _onFormChanged() {
-    if (_formChanged == AutovalidateMode.always) return;
-    setState(() {
-      _formChanged = AutovalidateMode.always;
-    });
-  }
-
-  final textFormStyle = TextStyle(
-    fontSize: 12,
-    color: Colors.black54,
-  );
 
   @override
   void didChangeDependencies() {
     _loginBloc = LoginBloc(
-      loginRepository: RepositoryProvider.of<LoginRepository>(context),
-      authRepository: RepositoryProvider.of<AuthRepository>(context),
-    );
+        loginRepository: context.read<LoginRepository>(),
+        authRepository: context.read<AuthRepository>(),
+        authBloc: context.read<AuthBloc>());
     super.didChangeDependencies();
   }
 
   @override
+  void dispose() {
+    Navigator.of(_dialogContext).pop();
+    _loginBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final labelStyle = TextStyle(
+      fontWeight: FontWeight.w700,
+      color: Colors.black,
+      fontSize: 20,
+    );
+    final hintStyle = TextStyle(
+      fontSize: 13,
+    );
     // ignore: close_sinks
     final height = MediaQuery.of(context).size.height;
 
@@ -74,120 +60,147 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<LoginBloc, LoginState>(
         listener: (ctx, state) async {
           if (state is LoginFailedState) {
+            if (_dialogContext != null) Navigator.of(_dialogContext).pop();
             _scaffoldKey.currentState.showSnackBar(
               SnackBar(
                 content: Text(state.message),
               ),
             );
-          }
-          if (state is LoginSucceedState) {
-            BlocProvider.of<AuthBloc>(ctx).add(CheckAuthStatus());
+          } else if (state is LoginLoadingState) {
+            await showDialog(
+              context: context,
+              builder: (_ctx) {
+                _dialogContext = _ctx;
+                return AlertDialog(
+                  content: Row(
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(width: 30),
+                      Text('loading..'),
+                    ],
+                  ),
+                );
+              },
+            );
           }
         },
         cubit: _loginBloc,
         builder: (ctx, state) {
-          if (state is LoginSucceedState) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (state is LoginFailedState) {
-            return Center(child: Text('Login failed'));
-          }
-          if (state is LoginLoadingState) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return SingleChildScrollView(
-              child: Container(
-                height: height,
-                child: Column(
-                  children: [
-                    Expanded(child: ImagesSliderWidget()),
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 25,
-                        ),
-                        child: Form(
-                          key: _formKey,
-                          onChanged: _onFormChanged,
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                decoration:
-                                    _decoration('Email', 'abebe@gmail.com'),
-                                style: textFormStyle,
-                                onSaved: (val) {
-                                  _email = val;
-                                },
-                                autovalidateMode: _formChanged,
-                                validator: (val) {
-                                  return val.isEmpty
-                                      ? "email can't be empty"
-                                      : null;
-                                },
+          return SingleChildScrollView(
+            child: Container(
+              height: height,
+              child: Column(
+                children: [
+                  Expanded(child: ImagesSliderWidget()),
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 25,
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              onSaved: (val) {
+                                _email = val;
+                              },
+                              validator: (val) {
+                                return val.isEmpty
+                                    ? "email can't be empty"
+                                    : null;
+                              },
+                              style: TextStyle(
+                                color: Colors.black54,
                               ),
-                              SizedBox(
-                                height: 10,
+                              decoration: InputDecoration(
+                                  isDense: true,
+                                  labelText: 'Email',
+                                  labelStyle: labelStyle,
+                                  hintStyle: hintStyle,
+                                  hintText: 'Email',
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            TextFormField(
+                              onSaved: (val) {
+                                _password = val;
+                              },
+                              validator: (val) {
+                                return val.isEmpty
+                                    ? "password can't be empty"
+                                    : null;
+                              },
+                              obscureText: _isObscure,
+                              style: TextStyle(
+                                color: Colors.black54,
                               ),
-                              TextFormField(
-                                decoration:
-                                    _decoration('Password', '. . . . . . . .'),
-                                obscureText: true,
-                                style: textFormStyle,
-                                onSaved: (val) {
-                                  _password = val;
-                                },
-                                autovalidateMode: _formChanged,
-                                validator: (val) {
-                                  return val.isEmpty
-                                      ? "password can't be empty"
-                                      : null;
-                                },
+                              decoration: InputDecoration(
+                                isDense: true,
+                                labelText: 'Password',
+                                labelStyle: labelStyle,
+                                hintStyle: hintStyle,
+                                hintText: 'Password',
+                                suffixIcon: _isObscure
+                                    ? IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _isObscure = false;
+                                          });
+                                        },
+                                        icon: Icon(Icons.visibility_off),
+                                      )
+                                    : IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _isObscure = true;
+                                          });
+                                        },
+                                        icon: Icon(Icons.visibility),
+                                      ),
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.always,
                               ),
-                              Spacer(),
-                              FlatButton(
-                                minWidth: double.infinity,
-                                color: Theme.of(context).primaryColor,
-                                onPressed: _formChanged ==
-                                        AutovalidateMode.always
-                                    ? () async {
-                                        if (true ||
-                                            _formKey.currentState.validate()) {
-                                          _formKey.currentState.save();
-                                          _loginBloc.add(
-                                            AttemptedLogin(
-                                              email: _email,
-                                              password: _password,
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    : null,
-                                child: Text('Login'),
-                                disabledColor: Colors.black26,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              FlatButton(
-                                minWidth: double.infinity,
-                                onPressed: () {},
-                                child: Text('create account'),
-                              ),
-                            ],
-                          ),
+                            ),
+                            Spacer(),
+                            FlatButton(
+                              minWidth: double.infinity,
+                              color: Theme.of(context).primaryColor,
+                              onPressed: () async {
+                                if (_formKey.currentState.validate()) {
+                                  _formKey.currentState.save();
+                                  _loginBloc.add(
+                                    AttemptedLogin(
+                                      email: _email,
+                                      password: _password,
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Text('Login'),
+                              disabledColor: Colors.black26,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            FlatButton(
+                              minWidth: double.infinity,
+                              onPressed: _createAccount,
+                              child: Text('create account'),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            );
-          }
+            ),
+          );
         },
       ),
     );

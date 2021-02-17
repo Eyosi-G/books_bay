@@ -1,9 +1,7 @@
 import 'package:books_bay/blocs/account/account.dart';
-import 'package:books_bay/blocs/auth/auth_bloc.dart';
-import 'package:books_bay/data_provider/data_providers.dart';
+import 'package:books_bay/blocs/blocs.dart';
 import 'package:books_bay/repositories/account_repository.dart';
-import 'package:books_bay/widgets/account_edit_widget.dart';
-import 'package:books_bay/widgets/failed_reload_widget.dart';
+import 'package:books_bay/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,10 +18,7 @@ class _SettingScreenState extends State<SettingScreen> {
   AccountBloc _accountBloc;
   initState() {
     _accountBloc = AccountBloc(
-        accountRepository: AccountRepository(
-          authDataProvider: AuthDataProvider(),
-          accountDataProvider: AccountDataProvider(),
-        ),
+        accountRepository: context.read<AccountRepository>(),
         authbloc: context.read<AuthBloc>())
       ..add(FetchAccountEvent());
     super.initState();
@@ -132,7 +127,9 @@ class _SettingScreenState extends State<SettingScreen> {
             );
           }
           if (state is AccountFailedState) {
-            return FailedReloadWidget(() {});
+            return FailedReloadWidget(() {
+              _accountBloc.add(FetchAccountEvent());
+            });
           }
           if (state is AccountFetchedState) {
             return Column(

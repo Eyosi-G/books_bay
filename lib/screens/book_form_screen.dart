@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:bloc/bloc.dart';
-import './books_route.dart';
 import './screens.dart';
 import '../constants.dart';
 
@@ -39,6 +38,7 @@ class _BookFormScreenState extends State<BookFormScreen> {
     super.initState();
   }
 
+  String _imageError = "";
   Widget get _imagePreview {
     if (widget.bookArg.edit && _image != null) {
       return Image.file(
@@ -111,44 +111,17 @@ class _BookFormScreenState extends State<BookFormScreen> {
             ],
           ),
         ),
-        SizedBox(
-          height: 20,
-        ),
-      ],
-    );
-  }
-
-  _buildDescriptionArea() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+        SizedBox(height: 10),
+        Text(_imageError, style: TextStyle(color: Colors.red)),
         SizedBox(
           height: 10,
-        ),
-        Text('Description'),
-        SizedBox(height: 2),
-        TextFormField(
-          initialValue:
-              widget.bookArg.edit ? widget.bookArg.book.description : null,
-          keyboardType: TextInputType.multiline,
-          maxLines: 6,
-          minLines: 6,
-          decoration: InputDecoration(
-            fillColor: Color(0xfff7f7e8),
-            filled: true,
-            focusColor: Colors.black,
-            border: OutlineInputBorder(),
-          ),
-          onSaved: (val) {
-            _book['description'] = val;
-          },
         ),
       ],
     );
   }
 
   _saveBookHandler() {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState.validate() && _book['image'].isNotEmpty) {
       _formKey.currentState.save();
       if (widget.bookArg.edit) {
         final book = Book(
@@ -174,12 +147,44 @@ class _BookFormScreenState extends State<BookFormScreen> {
       }
       Navigator.of(context).pop();
     }
+    setState(() {
+      if (_book["image"].isEmpty) {
+        _imageError = "please, upload an image";
+      } else {
+        _imageError = "";
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final labelStyle = TextStyle(
+      fontWeight: FontWeight.w700,
+      color: Colors.black,
+      fontSize: 20,
+    );
+    final hintStyle = TextStyle(
+      fontSize: 13,
+    );
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Book Information',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.close,
+            color: Colors.black,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
@@ -188,45 +193,84 @@ class _BookFormScreenState extends State<BookFormScreen> {
             shrinkWrap: true,
             children: [
               _addImageWidgetBuilder(),
-              Text('Title'),
-              SizedBox(height: 2),
               TextFormField(
                 initialValue:
                     widget.bookArg.edit ? widget.bookArg.book.title : null,
                 decoration: InputDecoration(
                   isDense: true,
-                  fillColor: Color(0xfff7f7e8),
-                  filled: true,
+                  labelText: 'Title',
+                  labelStyle: labelStyle,
+                  hintStyle: hintStyle,
+                  hintText: 'Title',
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
+                style: TextStyle(
+                  color: Colors.black54,
+                ),
+                textCapitalization: TextCapitalization.words,
                 onSaved: (val) {
                   setState(() {
                     _book['title'] = val;
                   });
                 },
+                validator: (val) => val.isEmpty ? "Title can't be empty" : null,
               ),
               SizedBox(
                 height: 10,
               ),
-              Text('Author'),
-              SizedBox(height: 2),
               TextFormField(
                 initialValue:
                     widget.bookArg.edit ? widget.bookArg.book.author : null,
                 decoration: InputDecoration(
                   isDense: true,
-                  fillColor: Color(0xfff7f7e8),
-                  filled: true,
+                  labelText: 'Author',
+                  labelStyle: labelStyle,
+                  hintStyle: hintStyle,
+                  hintText: 'Author',
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
+                textCapitalization: TextCapitalization.words,
                 onSaved: (val) {
                   setState(() {
                     _book['author'] = val;
                   });
                 },
+                style: TextStyle(
+                  color: Colors.black54,
+                ),
+                validator: (val) =>
+                    val.isEmpty ? "Author can't be empty" : null,
               ),
               SizedBox(
                 height: 10,
               ),
-              _buildDescriptionArea(),
+              TextFormField(
+                style: TextStyle(
+                  color: Colors.black54,
+                ),
+                initialValue: widget.bookArg.edit
+                    ? widget.bookArg.book.description
+                    : null,
+                keyboardType: TextInputType.multiline,
+                maxLines: 6,
+                minLines: 6,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: InputDecoration(
+                  isDense: true,
+                  labelText: 'Synopsis',
+                  labelStyle: labelStyle,
+                  hintStyle: hintStyle,
+                  hintText: 'Synopsis',
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                ),
+                onSaved: (val) {
+                  setState(() {
+                    _book['description'] = val;
+                  });
+                },
+                validator: (val) =>
+                    val.isEmpty ? "Description can't be empty" : null,
+              ),
               Row(
                 children: [
                   Checkbox(

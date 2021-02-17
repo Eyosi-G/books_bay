@@ -1,10 +1,5 @@
-import 'package:books_bay/blocs/auth/auth_bloc.dart';
-import 'package:books_bay/blocs/auth/auth_event.dart';
-import 'package:books_bay/screens/search_screen.dart';
+import 'package:books_bay/screens/screens.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../screens/library_books_screen.dart';
-import '../screens/home_screen.dart';
 
 class BottomNavigationBarWidget extends StatefulWidget {
   @override

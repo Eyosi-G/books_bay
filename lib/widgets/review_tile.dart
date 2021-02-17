@@ -1,12 +1,12 @@
-import 'package:books_bay/blocs/comments_list/comments_list_bloc.dart';
-import 'package:books_bay/blocs/comments_list/comments_list_event.dart';
+import 'package:books_bay/blocs/blocs.dart';
 import 'package:books_bay/models/comment.dart';
-import 'package:books_bay/widgets/write_review_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-enum Select { EDIT, DELETE }
+import 'widgets.dart';
+
+enum SelectOption { EDIT, DELETE }
 
 class ReviewTile extends StatelessWidget {
   final Comment comment;
@@ -48,9 +48,10 @@ class ReviewTile extends StatelessWidget {
                 ? null
                 : PopupMenuButton<Object>(
                     onSelected: (selected) {
-                      if (selected == Select.EDIT) {
-                        Scaffold.of(context).showBottomSheet(
-                          (_) => BlocProvider.value(
+                      if (selected == SelectOption.EDIT) {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (_) => BlocProvider.value(
                             value: context.read<CommentsListBloc>(),
                             child: WriteReviewScreen(
                               comment: comment.comment,
@@ -59,10 +60,15 @@ class ReviewTile extends StatelessWidget {
                               bookId: bookId,
                             ),
                           ),
-                          elevation: 10,
-                          backgroundColor: Color(0xfff7f7e8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              topLeft: Radius.circular(10),
+                            ),
+                          ),
+                          isScrollControlled: true,
                         );
-                      } else if (selected == Select.DELETE) {
+                      } else if (selected == SelectOption.DELETE) {
                         context.read<CommentsListBloc>().add(
                               DeleteComment(
                                 bookId: bookId,
@@ -81,7 +87,7 @@ class ReviewTile extends StatelessWidget {
                               Text('Edit'),
                             ],
                           ),
-                          value: Select.EDIT,
+                          value: SelectOption.EDIT,
                         ),
                         PopupMenuDivider(),
                         PopupMenuItem(
@@ -100,7 +106,7 @@ class ReviewTile extends StatelessWidget {
                               ),
                             ],
                           ),
-                          value: Select.DELETE,
+                          value: SelectOption.DELETE,
                         ),
                       ];
                     },

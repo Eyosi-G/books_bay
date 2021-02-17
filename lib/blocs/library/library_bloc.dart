@@ -1,10 +1,7 @@
 import 'package:books_bay/repositories/repositories.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'library.dart';
-import '../../models/models.dart';
-import '../books_list/books_list_bloc.dart';
-import '../books_list/books_list_event.dart';
+import '../blocs.dart';
 
 class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
   final LibraryRepository libraryRepository;
