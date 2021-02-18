@@ -1,23 +1,4 @@
-/*
-
-_id,
-title,
-is_best_seller,
-description,
-date_published,
-author,
-price,
-pages,
-cover,
-ebook_name,
-genre,
-
-
- */
 import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-import 'comment.dart';
 
 class Book extends Equatable {
   final String id;

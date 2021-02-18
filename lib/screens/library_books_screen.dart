@@ -3,7 +3,6 @@ import 'package:books_bay/widgets/failed_reload_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../constants.dart';
 import './screens.dart';
 import '../widgets/library_tile.dart';
 
@@ -43,7 +42,9 @@ class LibraryBooksScreen extends StatelessWidget {
       body: BlocBuilder<LibraryBloc, LibraryState>(
         builder: (ctx, state) {
           if (state is LibraryLoadingFailedState) {
-            return FailedReloadWidget(() {});
+            return FailedReloadWidget(() {
+              context.read<LibraryBloc>().add(FetchBooksEvent());
+            });
           }
           if (state is LibraryLoadingState) {
             return Center(child: CircularProgressIndicator());

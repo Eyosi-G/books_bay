@@ -1,22 +1,6 @@
-# books_bay
-
-book buying application
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-=======
-# book_bay
-
-Members name.
-
-  Eyosiyas Girma ---  ATR/0731/10
+# Books Bay
+#### Book Reviewing App
+#### Advanced Mobile Programming With Flutter.
+##### Prepared By
+Eyosiyas Girma <br/>
+ATR/0731/10 <br/>

@@ -22,6 +22,7 @@ class MainApp extends StatelessWidget {
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (ctx, state) {
           if (state is AuthenticatedState) {
+            context.read<LibraryBloc>().add(FetchBooksEvent());
             return BottomNavigationBarWidget();
           } else if (state is UnAuthenticatedState) {
             return LoginScreen();
