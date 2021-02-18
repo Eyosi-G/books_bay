@@ -14,17 +14,17 @@ xmlns="http://www.w3.org/TR/REC-html40">
  <o:DocumentProperties>
   <o:Author>Eyosiyas</o:Author>
   <o:LastAuthor>Eyosiyas</o:LastAuthor>
-  <o:Revision>5</o:Revision>
-  <o:TotalTime>26</o:TotalTime>
+  <o:Revision>6</o:Revision>
+  <o:TotalTime>28</o:TotalTime>
   <o:Created>2021-02-18T12:00:00Z</o:Created>
-  <o:LastSaved>2021-02-18T12:29:00Z</o:LastSaved>
+  <o:LastSaved>2021-02-18T12:35:00Z</o:LastSaved>
   <o:Pages>1</o:Pages>
-  <o:Words>28</o:Words>
-  <o:Characters>164</o:Characters>
+  <o:Words>11</o:Words>
+  <o:Characters>64</o:Characters>
   <o:Company>Microsoft</o:Company>
   <o:Lines>1</o:Lines>
   <o:Paragraphs>1</o:Paragraphs>
-  <o:CharactersWithSpaces>191</o:CharactersWithSpaces>
+  <o:CharactersWithSpaces>74</o:CharactersWithSpaces>
   <o:Version>15.00</o:Version>
  </o:DocumentProperties>
  <o:OfficeDocumentSettings>
@@ -36,8 +36,6 @@ xmlns="http://www.w3.org/TR/REC-html40">
 <!--[if gte mso 9]><xml>
  <w:WordDocument>
   <w:View>Print</w:View>
-  <w:SpellingState>Clean</w:SpellingState>
-  <w:GrammarState>Clean</w:GrammarState>
   <w:TrackMoves>false</w:TrackMoves>
   <w:TrackFormatting/>
   <w:ValidateAgainstSchemas/>
@@ -638,6 +636,15 @@ xmlns="http://www.w3.org/TR/REC-html40">
 </xml><![endif]-->
 <style>
 <!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;
+	mso-font-charset:1;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:variable;
+	mso-font-signature:0 0 0 0 0 0;}
  /* Style Definitions */
  p.MsoNormal, li.MsoNormal, div.MsoNormal
 	{mso-style-unhide:no;
@@ -713,9 +720,6 @@ p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxS
 	font-family:"Times New Roman",serif;
 	mso-fareast-font-family:"Times New Roman";
 	mso-fareast-theme-font:minor-fareast;}
-span.GramE
-	{mso-style-name:"";
-	mso-gram-e:yes;}
 .MsoChpDefault
 	{mso-style-type:export-only;
 	mso-default-props:yes;
@@ -773,25 +777,6 @@ Mobile Programming With Flutter.<o:p></o:p></span></p>
 <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'><o:p>&nbsp;</o:p></span></p>
 
 <p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'><o:p>&nbsp;</o:p></span></p>
-
-<p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>####Prepared
-By.<o:p></o:p></span></p>
-
-<p class=MsoNormal><span class=GramE><span style='mso-fareast-font-family:"Times New Roman"'>&gt;<span
-style='mso-spacerun:yes'>&nbsp; </span>Eyosiyas</span></span><span
-style='mso-fareast-font-family:"Times New Roman"'> Girma <o:p></o:p></span></p>
-
-<p class=MsoNormal><span class=GramE><span style='mso-fareast-font-family:"Times New Roman"'>&gt;<span
-style='mso-spacerun:yes'>&nbsp; </span>ATR</span></span><span style='mso-fareast-font-family:
-"Times New Roman"'>/0731/10<o:p></o:p></span></p>
-
-<p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'><o:p>&nbsp;</o:p></span></p>
-
-<p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>######Screen
-Shots<o:p></o:p></span></p>
-
-<p class=MsoNormal><span class=GramE><span style='mso-fareast-font-family:"Times New Roman"'>![</span></span><span
-style='mso-fareast-font-family:"Times New Roman"'>Login Screen](screenshots/login_screen.png)<o:p></o:p></span></p>
 
 </div>
 
