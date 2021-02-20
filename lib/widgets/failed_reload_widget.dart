@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FailedReloadWidget extends StatelessWidget {
-  Function reload;
+  final Function reload;
   FailedReloadWidget(this.reload);
   @override
   Widget build(BuildContext context) {
@@ -10,7 +10,7 @@ class FailedReloadWidget extends StatelessWidget {
       children: [
         Center(
           child: Image.asset(
-            'assets/images/floading_failed.png',
+            'assets/images/loading_failed.png',
             width: 70,
             height: 70,
           ),

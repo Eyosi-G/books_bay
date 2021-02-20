@@ -96,7 +96,9 @@ class HomeScreen extends StatelessWidget {
             final books = state.books;
             final bestSellers = state.bestSellers;
             if (books.isEmpty) {
-              return Center(child: Text('no books'));
+              return Center(
+                child: Text('Nothing is posted yet.'),
+              );
             } else {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -165,7 +167,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               );
             }
-            ;
           }
           return Container();
         },

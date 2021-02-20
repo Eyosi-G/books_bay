@@ -35,6 +35,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         yield LoginFailedState(message: event.message);
       }
     } catch (e) {
+      print(e);
       await Future.delayed(Duration(seconds: 2));
       yield LoginFailedState(message: 'failed on network');
     }

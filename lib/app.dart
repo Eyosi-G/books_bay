@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'blocs/admin/admin.dart';
 import 'blocs/auth/auth_bloc.dart';
 import 'blocs/auth/auth_event.dart';
 import 'blocs/books_list/books_list_bloc.dart';
 
 import 'blocs/library/library.dart';
+import 'data_provider/data_providers.dart';
+import 'repositories/admin/admin_repository.dart';
 import 'repositories/repositories.dart';
-import 'screens/book_form_screen.dart';
+import 'screens/admin/admin_screens/admin_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/screens.dart';
 import 'widgets/bottom_navigation_bar_widget.dart';
@@ -22,6 +25,16 @@ class MainApp extends StatelessWidget {
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (ctx, state) {
           if (state is AuthenticatedState) {
+            if (state.role == "admin")
+              return BlocProvider(
+                child: AdminHomeScreen(),
+                create: (_) => AdminBloc(
+                  AdminRepository(
+                    authDataProvider: AuthDataProvider(),
+                    adminDataProvider: AdminDataProvider(),
+                  ),
+                )..add(FetchUsers()),
+              );
             context.read<LibraryBloc>().add(FetchBooksEvent());
             return BottomNavigationBarWidget();
           } else if (state is UnAuthenticatedState) {

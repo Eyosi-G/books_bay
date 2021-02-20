@@ -41,7 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         yield UnAuthenticatedState();
       } else {
         //await LibraryDataProvider().fetchAndSave();
-        yield AuthenticatedState();
+        yield AuthenticatedState(auth.role);
       }
     } catch (e) {
       yield UnAuthenticatedState();

@@ -28,6 +28,10 @@ class Endpoints {
   static final getAccount = (String userId) => '$baseUrl/users/$userId';
   static final deleteAccount = (String userId) => '$baseUrl/users/$userId';
   static final updateAccount = '$baseUrl/users';
+
+  //admin
+  static final getUsersURL = '$baseUrl/admin/users';
+  static final updatePermissionURL = '$baseUrl/admin/permissions/users';
 }
 
 const kSharedPreferenceName = "user_data";

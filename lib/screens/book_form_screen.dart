@@ -2,11 +2,9 @@ import 'dart:io';
 
 import 'package:books_bay/blocs/library/library.dart';
 import 'package:books_bay/models/book.dart';
-import 'package:books_bay/repositories/repositories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:bloc/bloc.dart';
 import './screens.dart';
 import '../constants.dart';
 
@@ -52,14 +50,14 @@ class _BookFormScreenState extends State<BookFormScreen> {
         Endpoints.imageURL(widget.bookArg.book.coverImage),
         fit: BoxFit.cover,
         width: 140,
-        height: 140,
+        height: 160,
       );
     } else if (!widget.bookArg.edit && _image != null) {
       return Image.file(
         _image,
         fit: BoxFit.cover,
         width: 140,
-        height: 140,
+        height: 160,
       );
     }
     return null;
@@ -72,7 +70,7 @@ class _BookFormScreenState extends State<BookFormScreen> {
           child: Stack(
             children: [
               Container(
-                height: 140,
+                height: 160,
                 width: 140,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -94,6 +92,7 @@ class _BookFormScreenState extends State<BookFormScreen> {
                     ),
                     child: Icon(
                       Icons.add_circle,
+                      color: Theme.of(context).primaryColor,
                       size: 30,
                     ),
                   ),
@@ -252,8 +251,8 @@ class _BookFormScreenState extends State<BookFormScreen> {
                     ? widget.bookArg.book.description
                     : null,
                 keyboardType: TextInputType.multiline,
-                maxLines: 6,
-                minLines: 6,
+                maxLines: 4,
+                minLines: 4,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   isDense: true,

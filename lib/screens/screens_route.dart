@@ -1,7 +1,9 @@
+import 'package:books_bay/blocs/admin/admin.dart';
 import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../app.dart';
 import './screens.dart';
+import 'admin/admin_screens/admin_screen.dart';
 
 class ScreensRoute {
   static Route<dynamic> generateRoutes(RouteSettings settings) {
