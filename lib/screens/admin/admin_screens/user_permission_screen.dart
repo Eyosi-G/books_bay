@@ -89,7 +89,12 @@ class _UserPermissionScreenState extends State<UserPermissionScreen> {
           children: [
             Column(
               children: [
-                Text('${widget.user.username}'),
+                Text(
+                  '${widget.user.username}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 Text('${widget.user.email}')
               ],
             ),

@@ -7,6 +7,7 @@ import 'blocs/auth/auth_event.dart';
 import 'blocs/books_list/books_list_bloc.dart';
 
 import 'blocs/library/library.dart';
+import 'blocs/permission/permission.dart';
 import 'data_provider/data_providers.dart';
 import 'repositories/admin/admin_repository.dart';
 import 'repositories/repositories.dart';

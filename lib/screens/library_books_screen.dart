@@ -1,4 +1,6 @@
+import 'package:books_bay/blocs/blocs.dart';
 import 'package:books_bay/blocs/library/library.dart';
+import 'package:books_bay/repositories/repositories.dart';
 import 'package:books_bay/widgets/failed_reload_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,18 +25,35 @@ class LibraryBooksScreen extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-              icon: Icon(
-                Icons.add_circle,
-                size: 30,
-                color: Theme.of(context).primaryColor,
-              ),
-              onPressed: () {
-                Navigator.of(context).pushNamed(
-                  BookFormScreen.routeName,
-                  arguments: BookArg(
-                    edit: false,
+            child: BlocBuilder<PermissionBloc, PermissionState>(
+              cubit: PermissionBloc(context.read<AccountRepository>())
+                ..add(CheckPermission()),
+              builder: (ctx, state) {
+                if (state is PermissionLoadedState &&
+                    state.permission.postPermission == "READ_WRITE") {
+                  return IconButton(
+                    icon: Icon(
+                      Icons.add_circle,
+                      size: 30,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(
+                        BookFormScreen.routeName,
+                        arguments: BookArg(
+                          edit: false,
+                        ),
+                      );
+                    },
+                  );
+                }
+                return IconButton(
+                  icon: Icon(
+                    Icons.add_circle,
+                    size: 25,
+                    color: Colors.black12,
                   ),
+                  onPressed: () {},
                 );
               },
             ),

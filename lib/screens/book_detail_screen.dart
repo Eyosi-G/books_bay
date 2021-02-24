@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:books_bay/blocs/blocs.dart';
 import 'package:books_bay/blocs/comments_list/comments_list_bloc.dart';
 import 'package:books_bay/blocs/comments_list/comments_list_event.dart';
 import 'package:books_bay/blocs/comments_list/comments_list_state.dart';
@@ -7,6 +8,7 @@ import 'package:books_bay/blocs/comments_list/comments_list_state.dart';
 import 'package:books_bay/models/book.dart';
 
 import 'package:books_bay/repositories/comment_repository.dart';
+import 'package:books_bay/repositories/repositories.dart';
 import 'package:books_bay/widgets/review_tile.dart';
 import 'package:books_bay/widgets/write_review_screen.dart';
 import 'package:flutter/material.dart';
@@ -145,13 +147,32 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                 fontWeight: FontWeight.w600,
                               ),
                         ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.add_circle,
-                            size: 25,
-                          ),
-                          color: Theme.of(context).primaryColor,
-                          onPressed: _openReview,
+                        BlocBuilder<PermissionBloc, PermissionState>(
+                          cubit:
+                              PermissionBloc(context.read<AccountRepository>())
+                                ..add(CheckPermission()),
+                          builder: (ctx, state) {
+                            if (state is PermissionLoadedState &&
+                                state.permission.commentPermission ==
+                                    "READ_WRITE") {
+                              return IconButton(
+                                icon: Icon(
+                                  Icons.add_circle,
+                                  size: 25,
+                                ),
+                                color: Theme.of(context).primaryColor,
+                                onPressed: _openReview,
+                              );
+                            }
+                            return IconButton(
+                              icon: Icon(
+                                Icons.add_circle,
+                                size: 25,
+                                color: Colors.black12,
+                              ),
+                              onPressed: () {},
+                            );
+                          },
                         )
                       ],
                     ),
@@ -178,7 +199,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                 .toList(),
                           );
                         }
-
                         return Container();
                       },
                     )

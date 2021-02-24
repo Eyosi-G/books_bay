@@ -6,3 +6,4 @@ export './library/library.dart';
 export './login/login.dart';
 export './register/register.dart';
 export './search/search.dart';
+export './permission/permission.dart';
