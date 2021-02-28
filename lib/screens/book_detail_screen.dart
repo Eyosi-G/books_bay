@@ -10,6 +10,7 @@ import 'package:books_bay/models/book.dart';
 import 'package:books_bay/repositories/comment_repository.dart';
 import 'package:books_bay/repositories/repositories.dart';
 import 'package:books_bay/widgets/review_tile.dart';
+import 'package:books_bay/widgets/widgets.dart';
 import 'package:books_bay/widgets/write_review_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -184,6 +185,14 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           return Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                        if (state is CommentLoadFailedState) {
+                          return Center(
+                            child: FailedReloadWidget(state.message, () {
+                              _commentsListBloc
+                                  .add(FetchComments(widget.book.id));
+                            }),
                           );
                         }
                         if (state is CommentsLoadedState) {

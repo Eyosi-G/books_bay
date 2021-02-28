@@ -15,14 +15,18 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         final users = await adminRepository.fetchUsers();
         yield UsersListLoaded(users);
       } catch (e) {
-        yield FailedState("Couldn't load users");
+        yield FailedState("Loading users failed.");
       }
     }
     if (event is UpdateUserPermission) {
-      await adminRepository.updateUserPermission(
-          permission: event.permission, userId: event.userId);
-      final users = await adminRepository.fetchUsers();
-      yield UsersListLoaded(users);
+      try {
+        await adminRepository.updateUserPermission(
+            permission: event.permission, userId: event.userId);
+        final users = await adminRepository.fetchUsers();
+        yield UsersListLoaded(users);
+      } catch (e) {
+        yield FailedState("Updating permission failed.");
+      }
     }
   }
 }

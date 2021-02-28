@@ -19,7 +19,7 @@ class LibraryDataProvider {
         'content-type': 'application/json',
         'authorization': 'Bearer $token'
       },
-    );
+    ).timeout(Duration(seconds: 10));
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw Exception('creating book failed');
     }

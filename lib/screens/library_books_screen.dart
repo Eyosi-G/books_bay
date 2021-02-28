@@ -33,7 +33,7 @@ class LibraryBooksScreen extends StatelessWidget {
                     state.permission.postPermission == "READ_WRITE") {
                   return IconButton(
                     icon: Icon(
-                      Icons.add_circle,
+                      Icons.add,
                       size: 30,
                       color: Theme.of(context).primaryColor,
                     ),
@@ -49,7 +49,7 @@ class LibraryBooksScreen extends StatelessWidget {
                 }
                 return IconButton(
                   icon: Icon(
-                    Icons.add_circle,
+                    Icons.add,
                     size: 25,
                     color: Colors.black12,
                   ),
@@ -63,7 +63,7 @@ class LibraryBooksScreen extends StatelessWidget {
       body: BlocBuilder<LibraryBloc, LibraryState>(
         builder: (ctx, state) {
           if (state is LibraryLoadingFailedState) {
-            return FailedReloadWidget(() {
+            return FailedReloadWidget(state.message, () {
               context.read<LibraryBloc>().add(FetchBooksEvent());
             });
           }

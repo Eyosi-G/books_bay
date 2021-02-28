@@ -12,27 +12,43 @@ class LibraryBloc extends Bloc<LibraryEvent, LibraryState> {
   @override
   Stream<LibraryState> mapEventToState(LibraryEvent event) async* {
     if (event is FetchBooksEvent) {
-      yield LibraryLoadingState();
-      final books = await libraryRepository.fetchMyBooks();
-      yield LibraryLoadedState(books);
+      try {
+        yield LibraryLoadingState();
+        final books = await libraryRepository.fetchMyBooks();
+        yield LibraryLoadedState(books);
+      } catch (e) {
+        yield LibraryLoadingFailedState("Failed to Fetch My Posts");
+      }
     }
     if (event is AddBookEvent) {
-      await libraryRepository.createBook(event.book);
-      final books = await libraryRepository.fetchMyBooks();
-      booksListBloc.add(FetchedBooks());
-      yield LibraryLoadedState(books);
+      try {
+        await libraryRepository.createBook(event.book);
+        final books = await libraryRepository.fetchMyBooks();
+        booksListBloc.add(FetchedBooks());
+        yield LibraryLoadedState(books);
+      } catch (e) {
+        yield LibraryLoadingFailedState("Failed to Create Post");
+      }
     }
     if (event is DeleteBookEvent) {
-      await libraryRepository.deleteBook(event.bookId);
-      final books = await libraryRepository.fetchMyBooks();
-      booksListBloc.add(FetchedBooks());
-      yield LibraryLoadedState(books);
+      try {
+        await libraryRepository.deleteBook(event.bookId);
+        final books = await libraryRepository.fetchMyBooks();
+        booksListBloc.add(FetchedBooks());
+        yield LibraryLoadedState(books);
+      } catch (e) {
+        yield LibraryLoadingFailedState("Failed to Delete Post");
+      }
     }
     if (event is UpdateBookEvent) {
-      await libraryRepository.editBook(event.book, event.isFileSelected);
-      final books = await libraryRepository.fetchMyBooks();
-      booksListBloc.add(FetchedBooks());
-      yield LibraryLoadedState(books);
+      try {
+        await libraryRepository.editBook(event.book, event.isFileSelected);
+        final books = await libraryRepository.fetchMyBooks();
+        booksListBloc.add(FetchedBooks());
+        yield LibraryLoadedState(books);
+      } catch (e) {
+        yield LibraryLoadingFailedState("Failed to Update Post");
+      }
     }
   }
 }

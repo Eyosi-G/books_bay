@@ -12,8 +12,7 @@ class BooksDataProvider {
       headers: {
         'content-type': 'application/json',
       },
-    );
-    print(response.body);
+    ).timeout(Duration(seconds: 10));
     if (!(response.statusCode < 300 && response.statusCode >= 200)) {
       throw Exception("fetching books failed");
     }

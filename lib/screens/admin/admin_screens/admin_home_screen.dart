@@ -1,6 +1,5 @@
 import 'package:books_bay/blocs/admin/admin.dart';
 import 'package:books_bay/blocs/blocs.dart';
-import 'package:books_bay/models/models.dart';
 import 'package:books_bay/screens/admin/admin_widgets/user_tile.dart';
 import 'package:books_bay/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,7 @@ class AdminHomeScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Users',
+          'Admin Dashboard',
           style: TextStyle(
             color: Colors.black,
           ),
@@ -48,7 +47,7 @@ class AdminHomeScreen extends StatelessWidget {
       body: BlocBuilder<AdminBloc, AdminState>(
         builder: (ctx, state) {
           if (state is FailedState) {
-            return FailedReloadWidget(() {
+            return FailedReloadWidget(state.message, () {
               context.read<AdminBloc>().add(FetchUsers());
             });
           }

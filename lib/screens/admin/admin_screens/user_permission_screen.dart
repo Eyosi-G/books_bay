@@ -3,8 +3,6 @@ import 'package:books_bay/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../screens.dart';
-
 enum CommentPermission {
   READ_ONLY,
   READ_WRITE,
@@ -71,15 +69,18 @@ class _UserPermissionScreenState extends State<UserPermissionScreen> {
           color: Colors.black,
         ),
         actions: [
-          FlatButton.icon(
-            icon: Icon(Icons.check),
-            label: Text(
-              'Save',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: OutlineButton.icon(
+              icon: Icon(Icons.check),
+              label: Text(
+                'Save',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
               ),
+              onPressed: _save,
             ),
-            onPressed: _save,
           ),
         ],
       ),

@@ -11,10 +11,3 @@ class AttemptedLogin extends LoginEvent {
   @override
   List<Object> get props => [email, password];
 }
-
-class FailedLoginEvent extends LoginEvent {
-  final String message;
-  FailedLoginEvent({@required this.message});
-  @override
-  List<Object> get props => [message];
-}

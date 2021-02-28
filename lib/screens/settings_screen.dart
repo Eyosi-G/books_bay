@@ -120,16 +120,17 @@ class _SettingScreenState extends State<SettingScreen> {
       body: BlocBuilder<AccountBloc, AccountState>(
         cubit: _accountBloc,
         builder: (ctx, state) {
-          print(state);
           if (state is LoadingAccountState) {
             return Center(
               child: CircularProgressIndicator(),
             );
           }
           if (state is AccountFailedState) {
-            return FailedReloadWidget(() {
-              _accountBloc.add(FetchAccountEvent());
-            });
+            return Center(
+              child: FailedReloadWidget(state.message, () {
+                _accountBloc.add(FetchAccountEvent());
+              }),
+            );
           }
           if (state is AccountFetchedState) {
             return Column(

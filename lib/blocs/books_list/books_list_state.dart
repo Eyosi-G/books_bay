@@ -24,6 +24,8 @@ class BooksListFetchedState extends BooksListState {
 }
 
 class BooksListFetchFailedState extends BooksListState {
+  final String message;
+  BooksListFetchFailedState(this.message);
   @override
-  List<Object> get props => [];
+  List<Object> get props => [message];
 }

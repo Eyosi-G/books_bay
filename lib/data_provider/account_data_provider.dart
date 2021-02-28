@@ -62,7 +62,7 @@ class AccountDataProvider {
         'content-type': 'application/json',
         'authorization': 'Bearer $token',
       },
-    );
+    ).timeout(Duration(seconds: 10));
     if (!(response.statusCode < 300 && response.statusCode >= 200)) {
       throw Exception("response failed");
     }

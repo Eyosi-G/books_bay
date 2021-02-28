@@ -15,11 +15,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }) : super(InitialLoginState());
 
   @override
-  void onChange(Change<LoginState> change) {
-    print(change);
-  }
-
-  @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     try {
       if (event is AttemptedLogin) {
@@ -31,13 +26,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           ),
         );
       }
-      if (event is FailedLoginEvent) {
-        yield LoginFailedState(message: event.message);
-      }
     } catch (e) {
       print(e);
       await Future.delayed(Duration(seconds: 2));
-      yield LoginFailedState(message: 'failed on network');
+      yield LoginFailedState(message: "Failed to Login");
     }
   }
 

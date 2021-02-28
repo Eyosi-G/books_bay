@@ -23,7 +23,7 @@ class BooksListBloc extends Bloc<BooksListEvent, BooksListState> {
         );
       }
     } catch (e) {
-      yield BooksListFetchFailedState();
+      yield BooksListFetchFailedState("Failed Loading Books");
     }
   }
 

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class FailedReloadWidget extends StatelessWidget {
   final Function reload;
-  FailedReloadWidget(this.reload);
+  final String message;
+  FailedReloadWidget(this.message, this.reload);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -16,7 +17,7 @@ class FailedReloadWidget extends StatelessWidget {
           ),
         ),
         Center(
-          child: Text('Loading Failed'),
+          child: Text('$message'),
         ),
         SizedBox(height: 10),
         OutlineButton(

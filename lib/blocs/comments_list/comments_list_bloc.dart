@@ -12,30 +12,46 @@ class CommentsListBloc extends Bloc<CommentsListEvent, CommentsListState> {
   @override
   Stream<CommentsListState> mapEventToState(CommentsListEvent event) async* {
     if (event is AddComment) {
-      await commentRepository.addComment(
-          comment: event.comment, bookId: event.bookId);
-      final comments = await commentRepository.fetchComments(event.bookId);
-      yield CommentsLoadedState(comments);
+      try {
+        await commentRepository.addComment(
+            comment: event.comment, bookId: event.bookId);
+        final comments = await commentRepository.fetchComments(event.bookId);
+        yield CommentsLoadedState(comments);
+      } catch (e) {
+        yield CommentLoadFailedState("Adding Comment Failed");
+      }
     }
     if (event is FetchComments) {
-      yield LoadingCommentState();
-      final comments = await commentRepository.fetchComments(event.bookId);
-      yield CommentsLoadedState(comments);
+      try {
+        yield LoadingCommentState();
+        final comments = await commentRepository.fetchComments(event.bookId);
+        yield CommentsLoadedState(comments);
+      } catch (e) {
+        yield CommentLoadFailedState("Fetching Comments Failed");
+      }
     }
     if (event is EditComment) {
-      await commentRepository.editComment(
-        bookId: event.bookId,
-        commentText: event.comment,
-        commentId: event.commentId,
-      );
-      final comments = await commentRepository.fetchComments(event.bookId);
-      yield CommentsLoadedState(comments);
+      try {
+        await commentRepository.editComment(
+          bookId: event.bookId,
+          commentText: event.comment,
+          commentId: event.commentId,
+        );
+        final comments = await commentRepository.fetchComments(event.bookId);
+        yield CommentsLoadedState(comments);
+      } catch (e) {
+        yield CommentLoadFailedState("Editing Comment Failed");
+      }
     }
     if (event is DeleteComment) {
-      await commentRepository.deleteComment(
-          bookId: event.bookId, commentId: event.commentId);
-      final comments = await commentRepository.fetchComments(event.bookId);
-      yield CommentsLoadedState(comments);
+      try {
+        await commentRepository.deleteComment(
+            bookId: event.bookId, commentId: event.commentId);
+        final comments = await commentRepository.fetchComments(event.bookId);
+        yield CommentsLoadedState(comments);
+      } catch (e) {
+        yield CommentLoadFailedState("Deleting Comment Failed");
+      }
     }
   }
 }

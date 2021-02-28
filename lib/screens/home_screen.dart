@@ -88,7 +88,7 @@ class HomeScreen extends StatelessWidget {
             );
           }
           if (state is BooksListFetchFailedState) {
-            return FailedReloadWidget(() {
+            return FailedReloadWidget(state.message, () {
               context.read<BooksListBloc>().add(FetchedBooks());
             });
           }

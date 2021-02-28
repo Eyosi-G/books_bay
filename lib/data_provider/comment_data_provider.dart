@@ -11,7 +11,7 @@ class CommentDataProvider {
     final client = Client();
     final response = await client.get(Endpoints.getComments(bookId), headers: {
       'content-type': 'application/json',
-    });
+    }).timeout(Duration(seconds: 10));
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw Exception('fetching comments failed');
     }

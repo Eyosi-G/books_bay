@@ -37,12 +37,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _checkCurrentUser() async* {
     try {
       final auth = await authRepository.getAuth();
-      if (auth == null) {
-        yield UnAuthenticatedState();
-      } else {
-        //await LibraryDataProvider().fetchAndSave();
-        yield AuthenticatedState(auth.role);
-      }
+//      if (auth == null) {
+//        yield UnAuthenticatedState();
+//      } else {
+      //await LibraryDataProvider().fetchAndSave();
+      yield AuthenticatedState(auth.role);
+//      }
     } catch (e) {
       yield UnAuthenticatedState();
     }
