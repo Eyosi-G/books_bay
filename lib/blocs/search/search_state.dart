@@ -10,3 +10,7 @@ class SearchChanged extends SearchState {
 }
 
 class SearchLoadingState extends SearchState {}
+class SearchFailedState extends SearchState {
+  final String message;
+  SearchFailedState(this.message);
+}

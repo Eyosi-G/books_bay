@@ -16,7 +16,7 @@ class BookTileWidget extends StatelessWidget {
           Container(
             height: height,
             width: width,
-            color: Colors.red,
+            color: Theme.of(context).primaryColor,
             child: Image.network(
               Endpoints.imageURL(book.coverImage),
               fit: BoxFit.cover,

@@ -1,17 +1,10 @@
 import 'dart:ui';
 
 import 'package:books_bay/blocs/blocs.dart';
-import 'package:books_bay/blocs/comments_list/comments_list_bloc.dart';
-import 'package:books_bay/blocs/comments_list/comments_list_event.dart';
-import 'package:books_bay/blocs/comments_list/comments_list_state.dart';
-
+import 'package:books_bay/blocs/comments_list/comments_list.dart';
 import 'package:books_bay/models/book.dart';
-
-import 'package:books_bay/repositories/comment_repository.dart';
 import 'package:books_bay/repositories/repositories.dart';
-import 'package:books_bay/widgets/review_tile.dart';
 import 'package:books_bay/widgets/widgets.dart';
-import 'package:books_bay/widgets/write_review_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../constants.dart';
@@ -29,7 +22,6 @@ class BookDetailScreen extends StatefulWidget {
 class _BookDetailScreenState extends State<BookDetailScreen> {
   CommentsListBloc _commentsListBloc;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   void dispose() {
     _commentsListBloc.close();

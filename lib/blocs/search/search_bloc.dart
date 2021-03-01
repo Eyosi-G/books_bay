@@ -17,9 +17,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   Stream<SearchState> _search(String text) async* {
-    yield SearchLoadingState();
-    final books = await searchRepository.search(text);
-    yield SearchChanged(books);
+
+    try{
+      yield SearchLoadingState();
+      final books = await searchRepository.search(text);
+      yield SearchChanged(books);
+    }catch(e){
+      yield SearchFailedState("Searching Failed");
+    }
+
   }
 
   @override

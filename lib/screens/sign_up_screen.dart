@@ -217,13 +217,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               'Successfully Registered !',
                               style: TextStyle(
                                 color: Colors.green,
+                                fontWeight: FontWeight.w700,
                               ),
                             );
                           } else if (state is RegisterFailedState) {
                             return Text(
                               '${state.message}',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.red,
+                                fontWeight: FontWeight.w700,
                               ),
                             );
                           }

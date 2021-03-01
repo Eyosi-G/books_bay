@@ -13,24 +13,31 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
   @override
   Stream<AccountState> mapEventToState(AccountEvent event) async* {
-    try {
-      if (event is FetchAccountEvent) {
+    if (event is FetchAccountEvent) {
+      try {
         yield LoadingAccountState();
         final user = await accountRepository.getAccount();
         yield AccountFetchedState(user);
+      } catch (e) {
+        yield AccountFailedState("Fetching Account Information Failed");
       }
-      if (event is EditAccountEvent) {
+    }
+    if (event is EditAccountEvent) {
+      try {
         await accountRepository.updateAccount(event.user);
         final user = await accountRepository.getAccount();
         yield AccountFetchedState(user);
+      } catch (e) {
+        yield AccountFailedState("Editing Account Failed");
       }
-      if (event is DeleteAccountEvent) {
+    }
+    if (event is DeleteAccountEvent) {
+      try {
         await accountRepository.deleteAccount();
         authbloc.add(LogoutEvent());
+      } catch (e) {
+        yield AccountFailedState("Deleting Account Failed");
       }
-    } catch (e) {
-      print(e);
-      yield AccountFailedState("someting went wrong");
     }
   }
 }

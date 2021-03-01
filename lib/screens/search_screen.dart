@@ -99,6 +99,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   );
                 }
+                if (state is SearchFailedState) {
+                  return Center(child: Text(state.message));
+                }
                 return Container();
               },
             ),
